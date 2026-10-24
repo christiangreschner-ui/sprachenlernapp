@@ -1,80 +1,283 @@
-// Lerninhalte. Jede Lektion hat Vokabeln (words) und Sätze (sentences).
-// Format: [Fremdsprache, Deutsch]. Die Übungen werden daraus automatisch erzeugt.
-// Neue Lektionen kann man einfach unten anhängen.
+// Lerninhalte.
+//
+// Jeder Kurs besteht aus Teilen (units), jeder Teil aus Lektionen.
+// Schreibweise, damit es übersichtlich bleibt:
+//   words:     "fremd = deutsch; fremd = deutsch; …"
+//   sentences: "Fremder Satz = Deutscher Satz | Fremder Satz = Deutscher Satz | …"
+//   numbers:   [von, bis]  → diese Lektion übt zusätzlich Zahlen in diesem Bereich
+// Die Übungen werden automatisch daraus erzeugt. Später im Kurs wird es schwerer.
+// Neue Lektionen einfach anhängen. Die id einer Lektion nie ändern (daran hängt der Fortschritt).
 
-window.COURSES = {
-  es: {
-    name: "Spanisch",
-    flag: "🇪🇸",
-    voice: "es-ES",
-    lessons: [
-      {
-        id: "es-1", title: "Begrüßung", icon: "👋",
-        words: [["hola", "hallo"], ["adiós", "tschüss"], ["gracias", "danke"], ["por favor", "bitte"], ["sí", "ja"], ["no", "nein"]],
-        sentences: [["Hola, buenos días", "Hallo, guten Morgen"], ["Muchas gracias", "Vielen Dank"], ["Adiós, hasta mañana", "Tschüss, bis morgen"]],
-      },
-      {
-        id: "es-2", title: "Sich vorstellen", icon: "🙋",
-        words: [["yo", "ich"], ["tú", "du"], ["nombre", "Name"], ["soy", "ich bin"], ["eres", "du bist"], ["alemán", "Deutscher"]],
-        sentences: [["Me llamo Ana", "Ich heiße Ana"], ["Yo soy de Alemania", "Ich bin aus Deutschland"], ["¿Cómo te llamas?", "Wie heißt du?"]],
-      },
-      {
-        id: "es-3", title: "Zahlen", icon: "🔢",
-        words: [["uno", "eins"], ["dos", "zwei"], ["tres", "drei"], ["cuatro", "vier"], ["cinco", "fünf"], ["diez", "zehn"]],
-        sentences: [["Tengo dos hermanos", "Ich habe zwei Geschwister"], ["Son las tres", "Es ist drei Uhr"], ["Quiero cinco manzanas", "Ich möchte fünf Äpfel"]],
-      },
-      {
-        id: "es-4", title: "Essen & Trinken", icon: "🥘",
-        words: [["agua", "Wasser"], ["pan", "Brot"], ["café", "Kaffee"], ["vino", "Wein"], ["queso", "Käse"], ["manzana", "Apfel"]],
-        sentences: [["Un café, por favor", "Einen Kaffee, bitte"], ["Quiero agua", "Ich möchte Wasser"], ["El pan es bueno", "Das Brot ist gut"]],
-      },
-      {
-        id: "es-5", title: "Familie", icon: "👨‍👩‍👧",
-        words: [["madre", "Mutter"], ["padre", "Vater"], ["hermano", "Bruder"], ["hermana", "Schwester"], ["hijo", "Sohn"], ["hija", "Tochter"]],
-        sentences: [["Mi madre es simpática", "Meine Mutter ist nett"], ["Tengo una hermana", "Ich habe eine Schwester"], ["Mi padre trabaja mucho", "Mein Vater arbeitet viel"]],
-      },
-      {
-        id: "es-6", title: "Unterwegs", icon: "🚆",
-        words: [["calle", "Straße"], ["tren", "Zug"], ["hotel", "Hotel"], ["playa", "Strand"], ["izquierda", "links"], ["derecha", "rechts"]],
-        sentences: [["¿Dónde está el hotel?", "Wo ist das Hotel?"], ["El tren llega hoy", "Der Zug kommt heute an"], ["La playa está cerca", "Der Strand ist in der Nähe"]],
-      },
-    ],
-  },
-  fr: {
-    name: "Französisch",
-    flag: "🇫🇷",
-    voice: "fr-FR",
-    lessons: [
-      {
-        id: "fr-1", title: "Begrüßung", icon: "👋",
-        words: [["bonjour", "guten Tag"], ["salut", "hallo"], ["au revoir", "auf Wiedersehen"], ["merci", "danke"], ["oui", "ja"], ["non", "nein"]],
-        sentences: [["Bonjour, ça va ?", "Guten Tag, wie geht's?"], ["Merci beaucoup", "Vielen Dank"], ["Au revoir et à demain", "Auf Wiedersehen und bis morgen"]],
-      },
-      {
-        id: "fr-2", title: "Sich vorstellen", icon: "🙋",
-        words: [["je", "ich"], ["tu", "du"], ["nom", "Name"], ["je suis", "ich bin"], ["tu es", "du bist"], ["allemand", "Deutscher"]],
-        sentences: [["Je m'appelle Paul", "Ich heiße Paul"], ["Je suis allemand", "Ich bin Deutscher"], ["Comment tu t'appelles ?", "Wie heißt du?"]],
-      },
-      {
-        id: "fr-3", title: "Zahlen", icon: "🔢",
-        words: [["un", "eins"], ["deux", "zwei"], ["trois", "drei"], ["quatre", "vier"], ["cinq", "fünf"], ["dix", "zehn"]],
-        sentences: [["J'ai deux frères", "Ich habe zwei Brüder"], ["Il est trois heures", "Es ist drei Uhr"], ["Je veux cinq pommes", "Ich möchte fünf Äpfel"]],
-      },
-      {
-        id: "fr-4", title: "Essen & Trinken", icon: "🥐",
-        words: [["eau", "Wasser"], ["pain", "Brot"], ["café", "Kaffee"], ["vin", "Wein"], ["fromage", "Käse"], ["pomme", "Apfel"]],
-        sentences: [["Un café, s'il vous plaît", "Einen Kaffee, bitte"], ["Je veux de l'eau", "Ich möchte Wasser"], ["Le pain est bon", "Das Brot ist gut"]],
-      },
-      {
-        id: "fr-5", title: "Familie", icon: "👨‍👩‍👧",
-        words: [["mère", "Mutter"], ["père", "Vater"], ["frère", "Bruder"], ["sœur", "Schwester"], ["fils", "Sohn"], ["fille", "Tochter"]],
-        sentences: [["Ma mère est gentille", "Meine Mutter ist nett"], ["J'ai une sœur", "Ich habe eine Schwester"], ["Mon père travaille beaucoup", "Mein Vater arbeitet viel"]],
-      },
-      {
-        id: "fr-6", title: "Unterwegs", icon: "🚆",
-        words: [["rue", "Straße"], ["train", "Zug"], ["hôtel", "Hotel"], ["plage", "Strand"], ["gauche", "links"], ["droite", "rechts"]],
-        sentences: [["Où est l'hôtel ?", "Wo ist das Hotel?"], ["Le train arrive aujourd'hui", "Der Zug kommt heute an"], ["La plage est près d'ici", "Der Strand ist in der Nähe"]],
-      },
-    ],
-  },
-};
+(function () {
+  function L(id, title, icon, words, sentences, numbers) {
+    return {
+      id, title, icon, numbers: numbers || null,
+      words: words.split(";").map((p) => p.split("=").map((s) => s.trim())).filter((p) => p[0]),
+      sentences: sentences.split("|").map((p) => p.split("=").map((s) => s.trim())).filter((p) => p[0]),
+    };
+  }
+
+  window.COURSES = {
+    es: {
+      name: "Spanisch",
+      flag: "🇪🇸",
+      voice: "es-ES",
+      units: [
+        {
+          title: "Grundlagen",
+          lessons: [
+            L("es-1", "Begrüßung", "👋",
+              "hola = hallo; adiós = tschüss; gracias = danke; por favor = bitte; sí = ja; no = nein; buenas noches = gute Nacht; perdón = Entschuldigung",
+              "Hola, buenos días = Hallo, guten Morgen | Muchas gracias = Vielen Dank | Adiós, hasta mañana = Tschüss, bis morgen | Perdón, no hablo español = Entschuldigung, ich spreche kein Spanisch"),
+            L("es-2", "Sich vorstellen", "🙋",
+              "yo = ich; tú = du; nombre = Name; soy = ich bin; eres = du bist; alemán = Deutscher; usted = Sie; mucho gusto = freut mich",
+              "Me llamo Ana = Ich heiße Ana | Yo soy de Alemania = Ich bin aus Deutschland | ¿Cómo te llamas? = Wie heißt du? | Mucho gusto, Pedro = Freut mich, Pedro"),
+            L("es-3", "Zahlen 1–10", "🔢",
+              "uno = eins; dos = zwei; tres = drei; cuatro = vier; cinco = fünf; seis = sechs; siete = sieben; ocho = acht; nueve = neun; diez = zehn",
+              "Tengo dos hermanos = Ich habe zwei Geschwister | Son las tres = Es ist drei Uhr | Quiero cinco manzanas = Ich möchte fünf Äpfel | Mi hijo tiene siete años = Mein Sohn ist sieben Jahre alt",
+              [1, 10]),
+            L("es-4", "Essen & Trinken", "🥘",
+              "agua = Wasser; pan = Brot; café = Kaffee; vino = Wein; queso = Käse; manzana = Apfel; leche = Milch; cerveza = Bier",
+              "Un café, por favor = Einen Kaffee, bitte | Quiero agua = Ich möchte Wasser | El pan es bueno = Das Brot ist gut | Una cerveza y un vino = Ein Bier und einen Wein"),
+            L("es-5", "Familie", "👨‍👩‍👧",
+              "madre = Mutter; padre = Vater; hermano = Bruder; hermana = Schwester; hijo = Sohn; hija = Tochter; abuelo = Großvater; abuela = Großmutter",
+              "Mi madre es simpática = Meine Mutter ist nett | Tengo una hermana = Ich habe eine Schwester | Mi padre trabaja mucho = Mein Vater arbeitet viel | Mi abuela vive en Sevilla = Meine Großmutter wohnt in Sevilla"),
+            L("es-6", "Unterwegs", "🚆",
+              "calle = Straße; tren = Zug; hotel = Hotel; playa = Strand; izquierda = links; derecha = rechts; aeropuerto = Flughafen; estación = Bahnhof",
+              "¿Dónde está el hotel? = Wo ist das Hotel? | El tren llega hoy = Der Zug kommt heute an | La playa está cerca = Der Strand ist in der Nähe | La estación está a la derecha = Der Bahnhof ist rechts"),
+          ],
+        },
+        {
+          title: "Alltag",
+          lessons: [
+            L("es-7", "Farben", "🎨",
+              "rojo = rot; azul = blau; verde = grün; amarillo = gelb; negro = schwarz; blanco = weiß; gris = grau; naranja = orange",
+              "El cielo es azul = Der Himmel ist blau | Mi coche es rojo = Mein Auto ist rot | La casa es blanca = Das Haus ist weiß | Me gusta el verde = Ich mag Grün"),
+            L("es-8", "Zahlen 11–20", "🔢",
+              "once = elf; doce = zwölf; trece = dreizehn; catorce = vierzehn; quince = fünfzehn; dieciséis = sechzehn; diecisiete = siebzehn; dieciocho = achtzehn; diecinueve = neunzehn; veinte = zwanzig",
+              "Tengo quince años = Ich bin fünfzehn Jahre alt | Son doce euros = Das macht zwölf Euro | El autobús número once = Der Bus Nummer elf | Hay veinte personas = Es gibt zwanzig Personen",
+              [0, 20]),
+            L("es-9", "Wochentage", "📅",
+              "lunes = Montag; martes = Dienstag; miércoles = Mittwoch; jueves = Donnerstag; viernes = Freitag; sábado = Samstag; domingo = Sonntag; semana = Woche",
+              "Hoy es lunes = Heute ist Montag | El sábado voy a la playa = Am Samstag gehe ich zum Strand | Trabajo de lunes a viernes = Ich arbeite von Montag bis Freitag | El domingo descanso = Am Sonntag ruhe ich mich aus"),
+            L("es-10", "Uhrzeit", "⏰",
+              "hora = Stunde; minuto = Minute; tarde = Nachmittag; noche = Nacht; hoy = heute; mañana = morgen; ayer = gestern; temprano = früh",
+              "¿Qué hora es? = Wie spät ist es? | Es la una = Es ist ein Uhr | Son las ocho y media = Es ist halb neun | Mañana me levanto temprano = Morgen stehe ich früh auf"),
+            L("es-11", "Kleidung", "👕",
+              "camisa = Hemd; pantalones = Hose; zapatos = Schuhe; vestido = Kleid; chaqueta = Jacke; falda = Rock; sombrero = Hut; calcetines = Socken",
+              "Llevo una camisa azul = Ich trage ein blaues Hemd | Los zapatos son nuevos = Die Schuhe sind neu | Necesito una chaqueta = Ich brauche eine Jacke | El vestido es bonito = Das Kleid ist schön"),
+            L("es-12", "Zuhause", "🏠",
+              "casa = Haus; cocina = Küche; baño = Bad; dormitorio = Schlafzimmer; mesa = Tisch; silla = Stuhl; cama = Bett; puerta = Tür",
+              "La cocina es grande = Die Küche ist groß | Mi casa tiene dos baños = Mein Haus hat zwei Bäder | La cama está en el dormitorio = Das Bett ist im Schlafzimmer | Cierra la puerta, por favor = Mach bitte die Tür zu"),
+          ],
+        },
+        {
+          title: "Stadt & Freizeit",
+          lessons: [
+            L("es-13", "Zahlen bis 100", "💯",
+              "treinta = dreißig; cuarenta = vierzig; cincuenta = fünfzig; sesenta = sechzig; setenta = siebzig; ochenta = achtzig; noventa = neunzig; cien = hundert",
+              "Mi abuelo tiene ochenta años = Mein Großvater ist achtzig Jahre alt | Cuesta cincuenta euros = Es kostet fünfzig Euro | Hay treinta y dos alumnos = Es gibt zweiunddreißig Schüler | Vivo en el número cien = Ich wohne in Nummer hundert",
+              [0, 100]),
+            L("es-14", "In der Stadt", "🏙️",
+              "ciudad = Stadt; plaza = Platz; iglesia = Kirche; museo = Museum; banco = Bank; parque = Park; tienda = Laden; mercado = Markt",
+              "El museo está cerca de la plaza = Das Museum ist in der Nähe des Platzes | Vamos al parque = Wir gehen in den Park | ¿Dónde hay un banco? = Wo gibt es eine Bank? | El mercado abre a las nueve = Der Markt öffnet um neun"),
+            L("es-15", "Einkaufen", "🛍️",
+              "precio = Preis; caro = teuer; barato = billig; dinero = Geld; tarjeta = Karte; comprar = kaufen; pagar = bezahlen; cuánto = wie viel",
+              "¿Cuánto cuesta? = Wie viel kostet das? | Es muy caro = Das ist sehr teuer | Quiero pagar con tarjeta = Ich möchte mit Karte bezahlen | Voy a comprar pan = Ich werde Brot kaufen"),
+            L("es-16", "Im Restaurant", "🍽️",
+              "camarero = Kellner; menú = Speisekarte; cuenta = Rechnung; carne = Fleisch; pescado = Fisch; sopa = Suppe; postre = Nachtisch; cuchara = Löffel",
+              "La cuenta, por favor = Die Rechnung, bitte | Quiero el pescado = Ich möchte den Fisch | La sopa está caliente = Die Suppe ist heiß | ¿Tiene una mesa para dos? = Haben Sie einen Tisch für zwei?"),
+            L("es-17", "Wetter", "☀️",
+              "sol = Sonne; lluvia = Regen; nieve = Schnee; viento = Wind; calor = Hitze; frío = Kälte; nube = Wolke; tiempo = Wetter",
+              "Hace mucho calor = Es ist sehr heiß | Hoy llueve = Heute regnet es | Hace frío en invierno = Im Winter ist es kalt | ¿Qué tiempo hace? = Wie ist das Wetter?"),
+            L("es-18", "Hobbys", "⚽",
+              "fútbol = Fußball; música = Musik; leer = lesen; bailar = tanzen; nadar = schwimmen; cocinar = kochen; viajar = reisen; cantar = singen",
+              "Me gusta leer = Ich lese gern | Juego al fútbol los domingos = Ich spiele sonntags Fußball | Mi hermana baila muy bien = Meine Schwester tanzt sehr gut | ¿Te gusta la música? = Magst du Musik?"),
+          ],
+        },
+        {
+          title: "Leben",
+          lessons: [
+            L("es-19", "Körper & Gesundheit", "🩺",
+              "cabeza = Kopf; mano = Hand; pie = Fuß; ojo = Auge; boca = Mund; brazo = Arm; médico = Arzt; dolor = Schmerz",
+              "Me duele la cabeza = Mir tut der Kopf weh | Necesito un médico = Ich brauche einen Arzt | Tengo dolor de estómago = Ich habe Bauchschmerzen | Lávate las manos = Wasch dir die Hände"),
+            L("es-20", "Arbeit & Beruf", "💼",
+              "trabajo = Arbeit; oficina = Büro; jefe = Chef; profesor = Lehrer; enfermero = Krankenpfleger; empresa = Firma; reunión = Besprechung; ordenador = Computer",
+              "Trabajo en una oficina = Ich arbeite in einem Büro | Mi jefe es simpático = Mein Chef ist nett | Tengo una reunión a las diez = Ich habe um zehn eine Besprechung | La empresa es muy grande = Die Firma ist sehr groß"),
+            L("es-21", "Gefühle", "😊",
+              "feliz = glücklich; triste = traurig; cansado = müde; enfadado = wütend; nervioso = nervös; contento = zufrieden; aburrido = gelangweilt; tranquilo = ruhig",
+              "Estoy muy cansado = Ich bin sehr müde | ¿Por qué estás triste? = Warum bist du traurig? | Hoy estoy feliz = Heute bin ich glücklich | No estés nervioso = Sei nicht nervös"),
+            L("es-22", "Monate & Jahreszeiten", "🍂",
+              "enero = Januar; marzo = März; mayo = Mai; julio = Juli; octubre = Oktober; diciembre = Dezember; verano = Sommer; invierno = Winter",
+              "Mi cumpleaños es en mayo = Mein Geburtstag ist im Mai | En verano hace calor = Im Sommer ist es heiß | Diciembre es frío = Der Dezember ist kalt | Viajo en julio = Ich reise im Juli"),
+            L("es-23", "Tiere", "🐶",
+              "perro = Hund; gato = Katze; caballo = Pferd; pájaro = Vogel; vaca = Kuh; cerdo = Schwein; ratón = Maus; oso = Bär",
+              "Tengo un perro y un gato = Ich habe einen Hund und eine Katze | El caballo es rápido = Das Pferd ist schnell | Los pájaros cantan = Die Vögel singen | El oso es grande = Der Bär ist groß"),
+            L("es-24", "Zahlen bis 1000", "🧮",
+              "doscientos = zweihundert; trescientos = dreihundert; cuatrocientos = vierhundert; quinientos = fünfhundert; seiscientos = sechshundert; setecientos = siebenhundert; novecientos = neunhundert; mil = tausend",
+              "El viaje cuesta quinientos euros = Die Reise kostet fünfhundert Euro | Hay mil personas = Es gibt tausend Menschen | La ciudad tiene trescientos años = Die Stadt ist dreihundert Jahre alt | Necesito doscientos euros = Ich brauche zweihundert Euro",
+              [0, 1000]),
+          ],
+        },
+        {
+          title: "Fortgeschritten",
+          lessons: [
+            L("es-25", "Reisen", "✈️",
+              "viaje = Reise; maleta = Koffer; billete = Fahrkarte; pasaporte = Reisepass; vuelo = Flug; reserva = Reservierung; habitación = Zimmer; vacaciones = Urlaub",
+              "Mi vuelo sale a las seis = Mein Flug geht um sechs | Tengo una reserva para dos noches = Ich habe eine Reservierung für zwei Nächte | ¿Dónde está mi maleta? = Wo ist mein Koffer? | Nos vamos de vacaciones = Wir fahren in den Urlaub"),
+            L("es-26", "Gestern (Vergangenheit)", "⏪",
+              "fui = ich ging; comí = ich aß; hablé = ich sprach; vi = ich sah; hice = ich machte; compré = ich kaufte; llegué = ich kam an; dormí = ich schlief",
+              "Ayer comí paella = Gestern aß ich Paella | Fui al cine con mi hermano = Ich ging mit meinem Bruder ins Kino | Hablé con mi madre = Ich sprach mit meiner Mutter | Compré un libro nuevo = Ich kaufte ein neues Buch"),
+            L("es-27", "Pläne & Zukunft", "🔮",
+              "voy a = ich werde; próximo = nächste; quiero = ich will; espero = ich hoffe; plan = Plan; futuro = Zukunft; pronto = bald; después = danach",
+              "Voy a estudiar español = Ich werde Spanisch lernen | La próxima semana viajo a Madrid = Nächste Woche reise ich nach Madrid | Espero verte pronto = Ich hoffe, dich bald zu sehen | ¿Qué planes tienes? = Was hast du für Pläne?"),
+            L("es-28", "Meinungen", "💬",
+              "creo = ich glaube; me gusta = ich mag; odio = ich hasse; prefiero = ich bevorzuge; interesante = interessant; difícil = schwierig; fácil = einfach; importante = wichtig",
+              "Creo que tienes razón = Ich glaube, du hast recht | Prefiero el té al café = Ich trinke lieber Tee als Kaffee | El español no es difícil = Spanisch ist nicht schwierig | Es muy importante = Es ist sehr wichtig"),
+            L("es-29", "Natur", "🌳",
+              "árbol = Baum; flor = Blume; montaña = Berg; río = Fluss; mar = Meer; bosque = Wald; lago = See; cielo = Himmel",
+              "El río es muy largo = Der Fluss ist sehr lang | Hay muchas flores en el jardín = Im Garten gibt es viele Blumen | Subimos la montaña = Wir steigen auf den Berg | El mar está tranquilo = Das Meer ist ruhig"),
+            L("es-30", "Große Zahlen", "🏦",
+              "dos mil = zweitausend; cinco mil = fünftausend; diez mil = zehntausend; cien mil = hunderttausend; millón = Million; mitad = Hälfte; doble = doppelt; por ciento = Prozent",
+              "La casa cuesta cien mil euros = Das Haus kostet hunderttausend Euro | Madrid tiene más de tres millones de habitantes = Madrid hat mehr als drei Millionen Einwohner | La mitad es para ti = Die Hälfte ist für dich | Nací en mil novecientos noventa = Ich wurde neunzehnhundertneunzig geboren",
+              [0, 9999]),
+          ],
+        },
+      ],
+    },
+
+    fr: {
+      name: "Französisch",
+      flag: "🇫🇷",
+      voice: "fr-FR",
+      units: [
+        {
+          title: "Grundlagen",
+          lessons: [
+            L("fr-1", "Begrüßung", "👋",
+              "bonjour = guten Tag; salut = hallo; au revoir = auf Wiedersehen; merci = danke; oui = ja; non = nein; bonsoir = guten Abend; pardon = Entschuldigung",
+              "Bonjour, ça va ? = Guten Tag, wie geht's? | Merci beaucoup = Vielen Dank | Au revoir et à demain = Auf Wiedersehen und bis morgen | Pardon, je ne parle pas français = Entschuldigung, ich spreche kein Französisch"),
+            L("fr-2", "Sich vorstellen", "🙋",
+              "je = ich; tu = du; nom = Name; je suis = ich bin; tu es = du bist; allemand = Deutscher; vous = Sie; enchanté = freut mich",
+              "Je m'appelle Paul = Ich heiße Paul | Je suis allemand = Ich bin Deutscher | Comment tu t'appelles ? = Wie heißt du? | Enchanté, Marie = Freut mich, Marie"),
+            L("fr-3", "Zahlen 1–10", "🔢",
+              "un = eins; deux = zwei; trois = drei; quatre = vier; cinq = fünf; six = sechs; sept = sieben; huit = acht; neuf = neun; dix = zehn",
+              "J'ai deux frères = Ich habe zwei Brüder | Il est trois heures = Es ist drei Uhr | Je veux cinq pommes = Ich möchte fünf Äpfel | Mon fils a sept ans = Mein Sohn ist sieben Jahre alt",
+              [1, 10]),
+            L("fr-4", "Essen & Trinken", "🥐",
+              "eau = Wasser; pain = Brot; café = Kaffee; vin = Wein; fromage = Käse; pomme = Apfel; lait = Milch; bière = Bier",
+              "Un café, s'il vous plaît = Einen Kaffee, bitte | Je veux de l'eau = Ich möchte Wasser | Le pain est bon = Das Brot ist gut | Une bière et un vin = Ein Bier und einen Wein"),
+            L("fr-5", "Familie", "👨‍👩‍👧",
+              "mère = Mutter; père = Vater; frère = Bruder; sœur = Schwester; fils = Sohn; fille = Tochter; grand-père = Großvater; grand-mère = Großmutter",
+              "Ma mère est gentille = Meine Mutter ist nett | J'ai une sœur = Ich habe eine Schwester | Mon père travaille beaucoup = Mein Vater arbeitet viel | Ma grand-mère habite à Lyon = Meine Großmutter wohnt in Lyon"),
+            L("fr-6", "Unterwegs", "🚆",
+              "rue = Straße; train = Zug; hôtel = Hotel; plage = Strand; gauche = links; droite = rechts; aéroport = Flughafen; gare = Bahnhof",
+              "Où est l'hôtel ? = Wo ist das Hotel? | Le train arrive aujourd'hui = Der Zug kommt heute an | La plage est près d'ici = Der Strand ist in der Nähe | La gare est à droite = Der Bahnhof ist rechts"),
+          ],
+        },
+        {
+          title: "Alltag",
+          lessons: [
+            L("fr-7", "Farben", "🎨",
+              "rouge = rot; bleu = blau; vert = grün; jaune = gelb; noir = schwarz; blanc = weiß; gris = grau; orange = orange",
+              "Le ciel est bleu = Der Himmel ist blau | Ma voiture est rouge = Mein Auto ist rot | La maison est blanche = Das Haus ist weiß | J'aime le vert = Ich mag Grün"),
+            L("fr-8", "Zahlen 11–20", "🔢",
+              "onze = elf; douze = zwölf; treize = dreizehn; quatorze = vierzehn; quinze = fünfzehn; seize = sechzehn; dix-sept = siebzehn; dix-huit = achtzehn; dix-neuf = neunzehn; vingt = zwanzig",
+              "J'ai quinze ans = Ich bin fünfzehn Jahre alt | Ça fait douze euros = Das macht zwölf Euro | Le bus numéro onze = Der Bus Nummer elf | Il y a vingt personnes = Es gibt zwanzig Personen",
+              [0, 20]),
+            L("fr-9", "Wochentage", "📅",
+              "lundi = Montag; mardi = Dienstag; mercredi = Mittwoch; jeudi = Donnerstag; vendredi = Freitag; samedi = Samstag; dimanche = Sonntag; semaine = Woche",
+              "Aujourd'hui c'est lundi = Heute ist Montag | Samedi je vais à la plage = Am Samstag gehe ich zum Strand | Je travaille du lundi au vendredi = Ich arbeite von Montag bis Freitag | Le dimanche je me repose = Am Sonntag ruhe ich mich aus"),
+            L("fr-10", "Uhrzeit", "⏰",
+              "heure = Stunde; minute = Minute; après-midi = Nachmittag; nuit = Nacht; aujourd'hui = heute; demain = morgen; hier = gestern; tôt = früh",
+              "Quelle heure est-il ? = Wie spät ist es? | Il est une heure = Es ist ein Uhr | Il est huit heures et demie = Es ist halb neun | Demain je me lève tôt = Morgen stehe ich früh auf"),
+            L("fr-11", "Kleidung", "👕",
+              "chemise = Hemd; pantalon = Hose; chaussures = Schuhe; robe = Kleid; veste = Jacke; jupe = Rock; chapeau = Hut; chaussettes = Socken",
+              "Je porte une chemise bleue = Ich trage ein blaues Hemd | Les chaussures sont neuves = Die Schuhe sind neu | J'ai besoin d'une veste = Ich brauche eine Jacke | La robe est jolie = Das Kleid ist schön"),
+            L("fr-12", "Zuhause", "🏠",
+              "maison = Haus; cuisine = Küche; salle de bain = Bad; chambre = Schlafzimmer; table = Tisch; chaise = Stuhl; lit = Bett; porte = Tür",
+              "La cuisine est grande = Die Küche ist groß | Ma maison a deux salles de bain = Mein Haus hat zwei Bäder | Le lit est dans la chambre = Das Bett ist im Schlafzimmer | Ferme la porte, s'il te plaît = Mach bitte die Tür zu"),
+          ],
+        },
+        {
+          title: "Stadt & Freizeit",
+          lessons: [
+            L("fr-13", "Zahlen bis 100", "💯",
+              "trente = dreißig; quarante = vierzig; cinquante = fünfzig; soixante = sechzig; soixante-dix = siebzig; quatre-vingts = achtzig; quatre-vingt-dix = neunzig; cent = hundert",
+              "Mon grand-père a quatre-vingts ans = Mein Großvater ist achtzig Jahre alt | Ça coûte cinquante euros = Es kostet fünfzig Euro | Il y a trente-deux élèves = Es gibt zweiunddreißig Schüler | J'habite au numéro cent = Ich wohne in Nummer hundert",
+              [0, 100]),
+            L("fr-14", "In der Stadt", "🏙️",
+              "ville = Stadt; place = Platz; église = Kirche; musée = Museum; banque = Bank; parc = Park; magasin = Laden; marché = Markt",
+              "Le musée est près de la place = Das Museum ist in der Nähe des Platzes | On va au parc = Wir gehen in den Park | Où est la banque ? = Wo ist die Bank? | Le marché ouvre à neuf heures = Der Markt öffnet um neun"),
+            L("fr-15", "Einkaufen", "🛍️",
+              "prix = Preis; cher = teuer; pas cher = billig; argent = Geld; carte = Karte; acheter = kaufen; payer = bezahlen; combien = wie viel",
+              "Combien ça coûte ? = Wie viel kostet das? | C'est très cher = Das ist sehr teuer | Je voudrais payer par carte = Ich möchte mit Karte bezahlen | Je vais acheter du pain = Ich werde Brot kaufen"),
+            L("fr-16", "Im Restaurant", "🍽️",
+              "serveur = Kellner; menu = Speisekarte; addition = Rechnung; viande = Fleisch; poisson = Fisch; soupe = Suppe; dessert = Nachtisch; cuillère = Löffel",
+              "L'addition, s'il vous plaît = Die Rechnung, bitte | Je voudrais le poisson = Ich möchte den Fisch | La soupe est chaude = Die Suppe ist heiß | Vous avez une table pour deux ? = Haben Sie einen Tisch für zwei?"),
+            L("fr-17", "Wetter", "☀️",
+              "soleil = Sonne; pluie = Regen; neige = Schnee; vent = Wind; chaleur = Hitze; froid = Kälte; nuage = Wolke; temps = Wetter",
+              "Il fait très chaud = Es ist sehr heiß | Aujourd'hui il pleut = Heute regnet es | Il fait froid en hiver = Im Winter ist es kalt | Quel temps fait-il ? = Wie ist das Wetter?"),
+            L("fr-18", "Hobbys", "⚽",
+              "football = Fußball; musique = Musik; lire = lesen; danser = tanzen; nager = schwimmen; cuisiner = kochen; voyager = reisen; chanter = singen",
+              "J'aime lire = Ich lese gern | Je joue au football le dimanche = Ich spiele sonntags Fußball | Ma sœur danse très bien = Meine Schwester tanzt sehr gut | Tu aimes la musique ? = Magst du Musik?"),
+          ],
+        },
+        {
+          title: "Leben",
+          lessons: [
+            L("fr-19", "Körper & Gesundheit", "🩺",
+              "tête = Kopf; main = Hand; pied = Fuß; œil = Auge; bouche = Mund; bras = Arm; médecin = Arzt; douleur = Schmerz",
+              "J'ai mal à la tête = Mir tut der Kopf weh | J'ai besoin d'un médecin = Ich brauche einen Arzt | J'ai mal au ventre = Ich habe Bauchschmerzen | Lave-toi les mains = Wasch dir die Hände"),
+            L("fr-20", "Arbeit & Beruf", "💼",
+              "travail = Arbeit; bureau = Büro; chef = Chef; professeur = Lehrer; infirmier = Krankenpfleger; entreprise = Firma; réunion = Besprechung; ordinateur = Computer",
+              "Je travaille dans un bureau = Ich arbeite in einem Büro | Mon chef est sympa = Mein Chef ist nett | J'ai une réunion à dix heures = Ich habe um zehn eine Besprechung | L'entreprise est très grande = Die Firma ist sehr groß"),
+            L("fr-21", "Gefühle", "😊",
+              "heureux = glücklich; triste = traurig; fatigué = müde; en colère = wütend; nerveux = nervös; content = zufrieden; surpris = überrascht; calme = ruhig",
+              "Je suis très fatigué = Ich bin sehr müde | Pourquoi tu es triste ? = Warum bist du traurig? | Aujourd'hui je suis heureux = Heute bin ich glücklich | Ne sois pas nerveux = Sei nicht nervös"),
+            L("fr-22", "Monate & Jahreszeiten", "🍂",
+              "janvier = Januar; mars = März; mai = Mai; juillet = Juli; octobre = Oktober; décembre = Dezember; été = Sommer; hiver = Winter",
+              "Mon anniversaire est en mai = Mein Geburtstag ist im Mai | En été il fait chaud = Im Sommer ist es heiß | Décembre est froid = Der Dezember ist kalt | Je voyage en juillet = Ich reise im Juli"),
+            L("fr-23", "Tiere", "🐶",
+              "chien = Hund; chat = Katze; cheval = Pferd; oiseau = Vogel; vache = Kuh; cochon = Schwein; souris = Maus; ours = Bär",
+              "J'ai un chien et un chat = Ich habe einen Hund und eine Katze | Le cheval est rapide = Das Pferd ist schnell | Les oiseaux chantent = Die Vögel singen | L'ours est grand = Der Bär ist groß"),
+            L("fr-24", "Zahlen bis 1000", "🧮",
+              "deux cents = zweihundert; trois cents = dreihundert; quatre cents = vierhundert; cinq cents = fünfhundert; six cents = sechshundert; sept cents = siebenhundert; neuf cents = neunhundert; mille = tausend",
+              "Le voyage coûte cinq cents euros = Die Reise kostet fünfhundert Euro | Il y a mille personnes = Es gibt tausend Menschen | La ville a trois cents ans = Die Stadt ist dreihundert Jahre alt | J'ai besoin de deux cents euros = Ich brauche zweihundert Euro",
+              [0, 1000]),
+          ],
+        },
+        {
+          title: "Fortgeschritten",
+          lessons: [
+            L("fr-25", "Reisen", "✈️",
+              "voyage = Reise; valise = Koffer; billet = Fahrkarte; passeport = Reisepass; vol = Flug; réservation = Reservierung; clé = Schlüssel; vacances = Urlaub",
+              "Mon vol part à six heures = Mein Flug geht um sechs | J'ai une réservation pour deux nuits = Ich habe eine Reservierung für zwei Nächte | Où est ma valise ? = Wo ist mein Koffer? | On part en vacances = Wir fahren in den Urlaub"),
+            L("fr-26", "Gestern (Vergangenheit)", "⏪",
+              "j'ai mangé = ich habe gegessen; j'ai parlé = ich habe gesprochen; j'ai vu = ich habe gesehen; j'ai fait = ich habe gemacht; j'ai acheté = ich habe gekauft; je suis allé = ich bin gegangen; je suis arrivé = ich bin angekommen; j'ai dormi = ich habe geschlafen",
+              "Hier j'ai mangé une crêpe = Gestern habe ich einen Crêpe gegessen | Je suis allé au cinéma avec mon frère = Ich bin mit meinem Bruder ins Kino gegangen | J'ai parlé avec ma mère = Ich habe mit meiner Mutter gesprochen | J'ai acheté un nouveau livre = Ich habe ein neues Buch gekauft"),
+            L("fr-27", "Pläne & Zukunft", "🔮",
+              "je vais = ich werde; prochain = nächste; je veux = ich will; j'espère = ich hoffe; projet = Plan; avenir = Zukunft; bientôt = bald; après = danach",
+              "Je vais apprendre le français = Ich werde Französisch lernen | La semaine prochaine je vais à Paris = Nächste Woche fahre ich nach Paris | J'espère te voir bientôt = Ich hoffe, dich bald zu sehen | Quels sont tes projets ? = Was hast du für Pläne?"),
+            L("fr-28", "Meinungen", "💬",
+              "je crois = ich glaube; j'aime = ich mag; je déteste = ich hasse; je préfère = ich bevorzuge; intéressant = interessant; difficile = schwierig; facile = einfach; important = wichtig",
+              "Je crois que tu as raison = Ich glaube, du hast recht | Je préfère le thé au café = Ich trinke lieber Tee als Kaffee | Le français n'est pas difficile = Französisch ist nicht schwierig | C'est très important = Es ist sehr wichtig"),
+            L("fr-29", "Natur", "🌳",
+              "arbre = Baum; fleur = Blume; montagne = Berg; rivière = Fluss; mer = Meer; forêt = Wald; lac = See; ciel = Himmel",
+              "La rivière est très longue = Der Fluss ist sehr lang | Il y a beaucoup de fleurs dans le jardin = Im Garten gibt es viele Blumen | Nous montons sur la montagne = Wir steigen auf den Berg | La mer est calme = Das Meer ist ruhig"),
+            L("fr-30", "Große Zahlen", "🏦",
+              "deux mille = zweitausend; cinq mille = fünftausend; dix mille = zehntausend; cent mille = hunderttausend; million = Million; moitié = Hälfte; double = doppelt; pour cent = Prozent",
+              "La maison coûte cent mille euros = Das Haus kostet hunderttausend Euro | Paris a plus de deux millions d'habitants = Paris hat mehr als zwei Millionen Einwohner | La moitié est pour toi = Die Hälfte ist für dich | Je suis né en mille neuf cent quatre-vingt-dix = Ich wurde neunzehnhundertneunzig geboren",
+              [0, 9999]),
+          ],
+        },
+      ],
+    },
+  };
+
+  // Alle Lektionen eines Kurses als eine Liste, mit Teil-Nummer (für die Schwierigkeit)
+  Object.values(window.COURSES).forEach((course) => {
+    course.lessons = [];
+    course.units.forEach((unit, u) => unit.lessons.forEach((l) => { l.unit = u; course.lessons.push(l); }));
+  });
+})();
