@@ -159,3 +159,31 @@ h2 { font-size: 1.35rem; margin: 0.4em 0 0.8em; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+/* Teile des Kurses */
+.unit { margin-top: 18px; }
+.unit-head {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  padding: 12px 16px; border-radius: 16px; background: var(--green); color: #fff;
+  box-shadow: 0 4px 0 var(--green-dark);
+}
+.unit-c1 .unit-head { background: #ce82ff; box-shadow: 0 4px 0 #a568cc; }
+.unit-c2 .unit-head { background: var(--blue); box-shadow: 0 4px 0 #1899d6; }
+.unit-c3 .unit-head { background: #ff9600; box-shadow: 0 4px 0 #cc7800; }
+.unit-c4 .unit-head { background: #ff4b4b; box-shadow: 0 4px 0 #cc3c3c; }
+.unit-no { font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.85; }
+.unit-title { font-size: 1.15rem; font-weight: 800; flex: 1; }
+.unit-stars { font-size: 0.95rem; letter-spacing: 1px; }
+
+/* Wiederholen */
+.review-card {
+  display: flex; align-items: center; gap: 14px; width: 100%; margin-top: 14px; padding: 12px 16px; text-align: left;
+  background: var(--card); border: 2px solid var(--line); border-bottom-width: 5px; border-radius: 16px;
+}
+.review-card:hover { background: var(--blue-soft); border-color: var(--blue); }
+.review-card .icon { font-size: 1.8rem; }
+.review-card b { display: block; font-size: 1.05rem; }
+.review-card small { color: var(--muted); }
+
+.badge { align-self: flex-start; margin-top: 12px; padding: 4px 10px; border-radius: 99px; font-size: 0.85rem; font-weight: 800; background: #f3e5ff; color: #a568cc; }
+.hint { margin: -6px 0 0; color: var(--muted); font-size: 0.95rem; }
