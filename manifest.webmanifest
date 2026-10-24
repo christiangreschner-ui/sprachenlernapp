@@ -1,7 +1,7 @@
 {
   "name": "Sprachenlernapp",
   "short_name": "Sprachen",
-  "description": "Spanisch und Französisch lernen – kurz, spielerisch, jeden Tag.",
+  "description": "Spanisch, Französisch und Chinesisch lernen – kurz, spielerisch, jeden Tag.",
   "lang": "de",
   "start_url": "./",
   "scope": "./",

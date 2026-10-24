@@ -1,7 +1,7 @@
 // Speichert die App-Dateien, damit sie auch offline funktioniert.
 // Bei Änderungen an den Dateien die Versionsnummer erhöhen.
-const CACHE = "sprachenlernapp-v2";
-const FILES = ["./", "index.html", "css/style.css", "js/lessons.js", "js/numbers.js", "js/app.js", "manifest.webmanifest", "icons/icon.svg", "icons/icon-192.png", "icons/icon-512.png"];
+const CACHE = "sprachenlernapp-v3";
+const FILES = ["./", "index.html", "css/style.css", "js/lessons.js", "js/lessons-zh.js", "js/tips.js", "js/numbers.js", "js/course-setup.js", "js/app.js", "manifest.webmanifest", "icons/icon.svg", "icons/icon-192.png", "icons/icon-512.png"];
 
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(FILES)).then(() => self.skipWaiting()));
