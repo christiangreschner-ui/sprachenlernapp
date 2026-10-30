@@ -187,3 +187,136 @@ h2 { font-size: 1.35rem; margin: 0.4em 0 0.8em; }
 
 .badge { align-self: flex-start; margin-top: 12px; padding: 4px 10px; border-radius: 99px; font-size: 0.85rem; font-weight: 800; background: #f3e5ff; color: #a568cc; }
 .hint { margin: -6px 0 0; color: var(--muted); font-size: 0.95rem; }
+
+/* Einstieg wählen */
+.lang-card.level { text-align: left; }
+.lang-card.level b { display: block; font-size: 1.15rem; }
+.lang-card.level small { display: block; font-size: 0.9rem; font-weight: 600; color: var(--muted); margin-top: 2px; }
+.link { background: none; border: none; color: var(--blue); font-weight: 700; margin-top: 8px; text-decoration: underline; }
+
+/* Chinesisch: Zeichen mit Pinyin darunter */
+.zh-line { display: inline-flex; flex-wrap: wrap; gap: 2px 6px; align-items: flex-end; vertical-align: middle; }
+.tw { position: relative; display: inline-flex; flex-direction: column; align-items: center; line-height: 1.15; }
+.tw .hz { font-size: 1.15em; }
+.tw .py { font-size: 0.62em; font-weight: 600; color: var(--muted); letter-spacing: 0.01em; }
+.option .tw .py, .chip .tw .py { font-size: 0.7em; }
+.hz.blank { color: var(--blue); }
+
+/* Antippen für Übersetzung */
+.tw.g { cursor: pointer; border-bottom: 2px dashed var(--muted); display: inline-flex; }
+span.tw.g:not(:has(.hz)) { display: inline; }
+.tw.g.open { border-bottom-color: var(--blue); }
+.tw.g.open::after {
+  content: attr(data-g); position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%);
+  background: var(--text); color: var(--bg); font-size: 0.85rem; font-weight: 700; line-height: 1.3;
+  padding: 6px 10px; border-radius: 10px; white-space: nowrap; z-index: 5; pointer-events: none;
+}
+
+/* Lernkarten vor einer Lektion */
+.intro-body { justify-content: center; }
+.flashcard {
+  display: flex; flex-direction: column; align-items: center; gap: 16px; text-align: center;
+  padding: 28px 16px; border: 2px solid var(--line); border-bottom-width: 5px; border-radius: 20px;
+}
+.flashcard .speaker.big { margin: 0; }
+.fc-target { font-size: 2.4rem; font-weight: 800; }
+.fc-target .tw .py { font-size: 0.45em; }
+.fc-german { font-size: 1.3rem; color: var(--muted); font-weight: 700; }
+.tip-text { font-size: 1.15rem; line-height: 1.55; background: #fff8e1; color: #5c4a00; padding: 16px; border-radius: 16px; margin: 0; }
+.examples { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+.examples li { display: flex; gap: 12px; align-items: center; padding: 12px; border: 2px solid var(--line); border-radius: 14px; }
+.ex-target { font-size: 1.15rem; font-weight: 700; }
+.ex-german { color: var(--muted); margin-top: 4px; }
+.skip { background: none; border: none; color: var(--blue); font-weight: 800; white-space: nowrap; padding: 4px 6px; }
+
+/* Tipp während der Lektion */
+.tip-btn { background: none; border: 2px solid var(--line); border-radius: 12px; font-size: 1.1rem; padding: 2px 8px; }
+.tip-box { margin-top: 12px; padding: 12px 14px; border-radius: 14px; background: #fff8e1; color: #5c4a00; line-height: 1.5; }
+
+.badge.new { background: var(--green-soft); color: var(--green-dark); }
+.badge.tip { background: #fff3cd; color: #8a6d00; }
+.hint.center { text-align: center; margin-top: 0; }
+.feedback .small { font-size: 0.9rem; opacity: 0.85; }
+.card-text { flex: 1; }
+
+@media (prefers-color-scheme: dark) {
+  .tip-text, .tip-box { background: #3a3215; color: #ffe7a0; }
+  .badge.tip { background: #3a3215; color: #ffe7a0; }
+}
+
+/* ---------- Version 4 ---------- */
+
+/* Kopfzeile: Tagesziel und Einstellungen */
+.stats { gap: 12px; }
+.stat.goal-done { color: var(--green-dark); }
+.gear { background: none; border: 2px solid var(--line); border-radius: 12px; font-size: 1.2rem; padding: 4px 8px; }
+@media (max-width: 380px) { .stats { gap: 8px; font-size: 0.9rem; } }
+
+/* Weiterlernen */
+.continue-card {
+  display: flex; align-items: center; gap: 14px; width: 100%; margin-top: 14px; padding: 14px 16px; text-align: left;
+  background: var(--green); color: #fff; border: none; border-radius: 16px; box-shadow: 0 5px 0 var(--green-dark);
+}
+.continue-card:active:not(.all-done) { transform: translateY(3px); box-shadow: 0 2px 0 var(--green-dark); }
+.continue-card .icon { font-size: 1.6rem; width: 44px; height: 44px; display: grid; place-items: center; background: rgba(255,255,255,0.25); border-radius: 50%; flex-shrink: 0; }
+.continue-card b { display: block; font-size: 1.15rem; }
+.continue-card small { font-weight: 700; opacity: 0.92; }
+.continue-card.all-done { background: #ffc800; color: #4a3b00; box-shadow: 0 5px 0 #e0a800; }
+.home-actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0 12px; }
+
+/* Sterne pro Lektion, Grammatik-Lektionen */
+.node .mstars { color: #ffb100; font-size: 0.9rem; letter-spacing: 1px; margin-top: -4px; }
+.node.mastered button { background: #ffb100; box-shadow: 0 7px 0 #d18f00; outline: 4px solid #ffe08a; outline-offset: 2px; }
+.node.grammar button { border-radius: 22px; }
+.node.grammar.open button, .node.grammar.done:not(.mastered) button { background: #ce82ff; box-shadow: 0 7px 0 #a568cc; }
+.node.grammar .label { color: #a568cc; }
+.node.locked button { cursor: pointer; }
+.jump { margin-left: auto; background: rgba(255,255,255,0.25); color: #fff; border: 2px solid rgba(255,255,255,0.6); border-radius: 99px; padding: 4px 12px; font-weight: 800; font-size: 0.85rem; }
+.level-tag { font-size: 0.8rem; font-weight: 800; color: #ffb100; white-space: nowrap; }
+
+/* Unterseite zum Springen */
+.sheet-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.45); display: flex; align-items: flex-end; justify-content: center; z-index: 10; }
+.sheet {
+  width: 100%; max-width: 560px; background: var(--bg); border-radius: 22px 22px 0 0; padding: 22px 18px calc(18px + env(safe-area-inset-bottom));
+  display: grid; gap: 10px; text-align: center;
+}
+.sheet h2 { margin: 0; }
+.sheet p { margin: 0; line-height: 1.5; }
+.sheet .logo { font-size: 2.6rem; }
+@media (min-width: 700px) { .sheet-bg { align-items: center; } .sheet { border-radius: 22px; } }
+.btn.secondary { background: var(--card); color: var(--blue); border: 2px solid var(--line); box-shadow: 0 4px 0 var(--line); }
+.btn.secondary:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--line); }
+
+/* Grammatik */
+.badge.grammar { background: #f3e5ff; color: #a568cc; }
+.grammar-text { display: grid; gap: 10px; }
+.grammar-text p, .grammar-card p, .tip-box p { margin: 0; line-height: 1.55; }
+.grammar-text p { font-size: 1.1rem; background: #f3e5ff; color: #4b2a63; padding: 12px 14px; border-radius: 14px; }
+.tip-box { display: grid; gap: 8px; }
+.grammar-card { border: 2px solid var(--line); border-radius: 16px; padding: 12px 14px; margin-top: 12px; display: grid; gap: 10px; }
+.grammar-card[open] { display: block; }
+.grammar-card[open] > * + * { margin-top: 10px; }
+.grammar-card summary { cursor: pointer; font-size: 1.05rem; list-style-position: inside; }
+.grammar-card summary small { color: var(--muted); font-weight: 700; margin-left: 6px; }
+.back { margin: 0 0 4px; padding: 0; text-decoration: none; }
+
+/* Ergebnis: Sterne und Tagesziel */
+.big-stars { font-size: 2.2rem; color: #ffb100; letter-spacing: 4px; margin-top: 8px; }
+.goal-line { width: 100%; max-width: 360px; margin-top: 18px; display: grid; gap: 6px; color: var(--muted); font-weight: 700; }
+
+/* Einstellungen */
+.set-block { margin-top: 20px; padding: 16px; border: 2px solid var(--line); border-radius: 16px; display: grid; gap: 10px; }
+.set-block h2 { margin: 0; font-size: 1.15rem; }
+.goal-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; }
+.chip.goal { display: flex; flex-direction: column; align-items: center; }
+.chip.goal small { color: var(--muted); font-weight: 700; }
+.chip.goal.selected { background: var(--blue-soft); border-color: var(--blue); color: var(--blue); }
+textarea.code { width: 100%; font: 0.85rem/1.4 ui-monospace, monospace; padding: 10px; border: 2px solid var(--line); border-radius: 12px; background: var(--card); color: var(--text); word-break: break-all; resize: vertical; }
+.notice { background: var(--green-soft); color: var(--green-dark); font-weight: 800; padding: 10px 14px; border-radius: 12px; }
+
+@media (prefers-color-scheme: dark) {
+  .grammar-text p, .badge.grammar { background: #3a2550; color: #e8ccff; }
+  .node.grammar .label { color: #d6a8ff; }
+}
+[hidden] { display: none !important; }
+.blank-gap { display: inline-block; min-width: 3.2em; border-bottom: 3px solid var(--blue); color: transparent; }

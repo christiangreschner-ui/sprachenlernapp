@@ -4,18 +4,22 @@
 // Schreibweise, damit es übersichtlich bleibt:
 //   words:     "fremd = deutsch; fremd = deutsch; …"
 //   sentences: "Fremder Satz = Deutscher Satz | Fremder Satz = Deutscher Satz | …"
+//   Chinesisch: "Zeichen = Pinyin = deutsch"
 //   numbers:   [von, bis]  → diese Lektion übt zusätzlich Zahlen in diesem Bereich
 // Die Übungen werden automatisch daraus erzeugt. Später im Kurs wird es schwerer.
 // Neue Lektionen einfach anhängen. Die id einer Lektion nie ändern (daran hängt der Fortschritt).
 
 (function () {
-  function L(id, title, icon, words, sentences, numbers) {
-    return {
-      id, title, icon, numbers: numbers || null,
-      words: words.split(";").map((p) => p.split("=").map((s) => s.trim())).filter((p) => p[0]),
-      sentences: sentences.split("|").map((p) => p.split("=").map((s) => s.trim())).filter((p) => p[0]),
-    };
+  // Für Chinesisch gibt es drei Teile: Zeichen = Pinyin = Deutsch
+  function parse(text, sep) {
+    return text.split(sep).map((p) => p.split("=").map((s) => s.trim())).filter((p) => p[0])
+      .map((p) => (p.length === 3 ? [p[0], p[2], p[1]] : p));
   }
+
+  function L(id, title, icon, words, sentences, numbers) {
+    return { id, title, icon, numbers: numbers || null, words: parse(words, ";"), sentences: parse(sentences, "|") };
+  }
+  window.makeLesson = L;
 
   window.COURSES = {
     es: {
@@ -275,9 +279,4 @@
     },
   };
 
-  // Alle Lektionen eines Kurses als eine Liste, mit Teil-Nummer (für die Schwierigkeit)
-  Object.values(window.COURSES).forEach((course) => {
-    course.lessons = [];
-    course.units.forEach((unit, u) => unit.lessons.forEach((l) => { l.unit = u; course.lessons.push(l); }));
-  });
 })();

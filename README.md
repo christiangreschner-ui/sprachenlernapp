@@ -1,17 +1,26 @@
 # Sprachenlernapp 🦜
 
-Eine kleine Sprachlern-App im Stil von Duolingo/Babbel – zum Start mit **Spanisch** und **Französisch**.
+Eine kleine Sprachlern-App im Stil von Duolingo/Babbel – mit **Spanisch**, **Französisch** und **Chinesisch**.
 Sie läuft im Browser am Computer und lässt sich auf dem Handy wie eine App installieren.
 
 ## Was die App kann
 
-- Sprache wählen (Spanisch 🇪🇸 oder Französisch 🇫🇷), jederzeit über die Flagge oben links wechseln
-- 30 Lektionen pro Sprache in 5 Teilen: Grundlagen, Alltag, Stadt & Freizeit, Leben, Fortgeschritten
-- Rund 240 Vokabeln und 120 Sätze pro Sprache, dazu Zahlen-Training bis 9999
+- Drei Sprachen: Spanisch 🇪🇸, Französisch 🇫🇷 und Chinesisch 🇨🇳 (Schriftzeichen mit Pinyin)
+- Beim ersten Start pro Sprache: „Ich bin ganz neu“ oder ein kurzer Einstufungstest, der bekannte Teile überspringt
+- Spanisch und Französisch: 49 Lektionen in 7 Teilen (davon 7 Grammatik-Lektionen), rund 340 Vokabeln pro Sprache
+- Chinesisch: 42 Lektionen in 6 Teilen (davon 6 Grammatik-Lektionen) für komplette Anfänger, mit Pinyin unter jedem Zeichen
+- Grammatik: am Ende jedes Teils eine Grammatik-Lektion mit Erklärung, Beispielen und Lückensätzen;
+  alle Regeln zum Nachlesen unter „📘 Grammatik“
+- Später einsteigen: „▶ Weiterlernen“ führt immer zur nächsten Lektion. Eine gesperrte Lektion antippen
+  (oder „Hierhin springen“ bei einem Teil) startet einen kurzen Test – mit 8 von 10 richtig springt man direkt dorthin
+- Jede Lektion hat 3 Stufen (★★★): Wer sie noch einmal spielt, bekommt schwerere Aufgaben und mehr Punkte
+- Tagesziel (🎯) und Einstellungen (⚙️): Tagesziel wählen, Einstufungstest wiederholen, Fortschritt per Code auf ein anderes Gerät mitnehmen
+- Vor jeder neuen Lektion: ein kurzer Tipp, Lernkarten für jedes neue Wort und Beispielsätze mit Aussprache
+- In Sätzen kann man auf ein Wort tippen und sieht die Übersetzung
 - Die Schwierigkeit steigt von Teil zu Teil: mehr Aufgaben (10 bis 18), mehr Schreiben, schwerere Auswahl
-- Übungsarten: Wort auswählen, Hören, Paare finden, Satz bauen (in beide Richtungen), Lückentext,
-  Wort eintippen, Diktat (Wort oder ganzer Satz), Zahlen hören, lesen und schreiben, Wiederholung alter Vokabeln
-- „Wiederholen“-Knopf: gemischte Übungen aus allem, was man schon gelernt hat
+- Übungsarten: Wort auswählen, Hören, Paare finden, Satz bauen, Lückentext, Wort eintippen, Diktat,
+  Zahlen hören, lesen und schreiben, Pinyin schreiben (Chinesisch), Wiederholung alter Vokabeln
+- „Wiederholen“-Knopf: gemischte Übungen, Wörter mit vielen Fehlern kommen öfter dran
 - Falsche Antworten kommen am Ende der Lektion noch einmal dran
 - Punkte (XP), Tage in Folge (🔥), Trefferquote und Fortschritt werden auf dem Gerät gespeichert
 - Funktioniert nach dem ersten Öffnen auch offline
@@ -29,8 +38,8 @@ Nach ein bis zwei Minuten ist die App unter `https://christiangreschner-ui.githu
 
 ## Inhalte erweitern
 
-Alle Vokabeln und Sätze stehen in [`js/lessons.js`](js/lessons.js), in einer einfachen Schreibweise
-(`hola = hallo; adiós = tschüss`). Eine neue Lektion ist nur ein weiterer Eintrag mit Wörtern und Sätzen –
+Alle Vokabeln und Sätze stehen in [`js/lessons.js`](js/lessons.js) und [`js/lessons-zh.js`](js/lessons-zh.js), in einer einfachen Schreibweise
+(`hola = hallo; adiós = tschüss`, bei Chinesisch `你好 = nǐ hǎo = hallo`). Weitere Teile stehen in [`js/lessons-extra.js`](js/lessons-extra.js), die Grammatik in [`js/grammar.js`](js/grammar.js). Tipps stehen in [`js/tips.js`](js/tips.js). Eine neue Lektion ist nur ein weiterer Eintrag mit Wörtern und Sätzen –
 die Übungen werden automatisch daraus erzeugt. Eine neue Sprache ist ein weiterer Block neben `es` und `fr`.
 
 ## Aufbau
@@ -39,7 +48,12 @@ die Übungen werden automatisch daraus erzeugt. Eine neue Sprache ist ein weiter
 | --- | --- |
 | `index.html` | Die Seite |
 | `css/style.css` | Aussehen (hell und dunkel) |
-| `js/lessons.js` | Lerninhalte |
+| `js/lessons.js` | Lerninhalte Spanisch und Französisch |
+| `js/lessons-zh.js` | Lerninhalte Chinesisch |
+| `js/lessons-extra.js` | Weitere Teile (6 und 7, Chinesisch 5 und 6) |
+| `js/grammar.js` | Grammatik-Lektionen für alle drei Sprachen |
+| `js/tips.js` | Tipps pro Lektion und Wörterbuch fürs Antippen |
+| `js/course-setup.js` | Bereitet die Kurse beim Start vor |
 | `js/numbers.js` | Zahlen als Wörter (für das Zahlen-Training) |
 | `js/app.js` | Ablauf, Übungen, Fortschritt |
 | `sw.js`, `manifest.webmanifest`, `icons/` | Installation aufs Handy und Offline-Nutzung |
