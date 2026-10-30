@@ -13,7 +13,8 @@
 
   function defaultState() {
     // placed: Einstieg gewählt (pro Sprache), weak: Wörter, die oft falsch waren
-    return { lang: null, xp: 0, streak: 0, lastDay: null, done: {}, placed: {}, weak: {} };
+    // goal: Tagesziel in XP, dayXp/dayKey: heute gesammelte XP
+    return { lang: null, xp: 0, streak: 0, lastDay: null, done: {}, placed: {}, weak: {}, goal: 30, dayXp: 0, dayKey: null };
   }
 
   function loadState() {
@@ -56,10 +57,21 @@
     return 0;
   }
 
-  function finishLesson(lesson, mistakes) {
-    // Später im Kurs gibt es mehr Punkte
-    const xp = XP_PER_LESSON + 2 * (lesson.unit || 0) + (mistakes === 0 ? 5 : 0);
+  function todayXp() {
+    return state.dayKey === today() ? state.dayXp : 0;
+  }
+
+  // Wie oft eine Lektion geschafft wurde: 1 = ★, 2 = ★★, 3+ = ★★★ (gemeistert)
+  function mastery(lesson) {
+    return Math.min(state.done[lesson.id] || 0, 3);
+  }
+
+  function finishLesson(lesson, mistakes, boost) {
+    // Später im Kurs und auf höherer Stufe gibt es mehr Punkte
+    const xp = XP_PER_LESSON + 2 * (lesson.unit || 0) + 3 * (boost || 0) + (mistakes === 0 ? 5 : 0);
     state.xp += xp;
+    state.dayXp = todayXp() + xp;
+    state.dayKey = today();
     if (!lesson.isReview) state.done[lesson.id] = (state.done[lesson.id] || 0) + 1;
     if (state.lastDay !== today()) {
       state.streak = state.lastDay === yesterday() ? state.streak + 1 : 1;
@@ -206,8 +218,10 @@
         return `<span class="tw${g ? " g" : ""}"${g ? ` data-g="${esc(g)}"` : ""}><span class="hz">${esc(t)}</span><span class="py">${esc(py) || "&nbsp;"}</span></span>`;
       }).join("")}</span>`;
     }
-    if (!gloss) return esc(text);
+    const blank = (p) => p.replace(/_{3,}/, '<span class="blank-gap">___</span>');
+    if (!gloss) return parts.map((p) => (/_{3,}/.test(p) ? blank(esc(p)) : esc(p))).join(" ");
     return parts.map((p) => {
+      if (/_{3,}/.test(p)) return blank(esc(p));
       const g = glossOf(p);
       return g ? `<span class="tw g" data-g="${esc(g)}">${esc(p)}</span>` : esc(p);
     }).join(" ");
@@ -244,8 +258,10 @@
   // Leicht zuerst, schwer am Ende einer Lektion
   const LEVEL = { chooseT: 0, chooseD: 0, listen: 0, match: 0, numRead: 0, numPick: 0, gap: 1, buildT: 1, buildD: 1, buildListen: 1, review: 1, number: 1, numHear: 2, type: 2, typePinyin: 2, numWrite: 2, dictWord: 2, dictSentence: 2 };
 
-  function buildExercises(lesson, c, lang) {
-    const tier = Math.min(lesson.unit || 0, PLANS.length - 1);
+  function buildExercises(lesson, c, lang, boost) {
+    if (lesson.grammar) return grammarExercises(lesson, c, boost || 0);
+    // boost: Wiederholung einer geschafften Lektion = höhere Stufe, schwerere Aufgaben
+    const tier = Math.min((lesson.unit || 0) + (boost || 0), PLANS.length - 1);
     const zh = !!c.pinyin;
     const index = c.lessons.indexOf(lesson);
     const earlier = lesson.isReview ? lesson.pool : c.lessons.slice(0, Math.max(index, 0));
@@ -365,7 +381,47 @@
       },
     };
 
-    return plan.map((p) => make[p]());
+    const list = plan.map((p) => make[p]());
+    // In der Wiederholung kommen auch Grammatik-Übungen dran
+    if (lesson.isReview && lesson.drills && lesson.drills.length) {
+      pick(lesson.drills, 2).forEach((d) => list.splice(randInt(Math.floor(list.length / 2), list.length), 0, drillExercise(d)));
+    }
+    return list;
+  }
+
+  // ---------- Grammatik ----------
+
+  // Lücke im Satz mit dem richtigen Wort füllen
+  function drillExercise(d) {
+    const full = d.s.replace("___", d.a);
+    return { type: "choice", prompt: "Setze das richtige Wort ein", show: d.s, showT: true, gloss: true, hint: d.de,
+      answer: d.a, optT: true, options: shuffle([d.a].concat(d.wrong.slice(0, 3))), solution: full, solT: true, speakSolution: full, grammar: true };
+  }
+
+  function grammarExercises(lesson, c, boost) {
+    const zh = !!c.pinyin;
+    const ex = lesson.sentences;
+    const germanTokens = [].concat(...ex.map((s) => tokens(s[1])));
+    const targetTokens = [].concat(...ex.map((s) => tokens(s[0])));
+    const nextEx = cycler(ex);
+    const build = (kind) => {
+      const s = nextEx();
+      if (kind === "T") return sentenceExercise("Übersetze diesen Satz", s[1], s[0], targetTokens, 2 + boost, { chipsT: true, solT: true, speakAnswer: true });
+      if (kind === "D") return sentenceExercise("Übersetze ins Deutsche", s[0], s[1], germanTokens, 2 + boost, { showT: true, gloss: true, speakText: s[0] });
+      return sentenceExercise("Hör zu und bau den Satz", null, s[0], targetTokens, 2 + boost, { chipsT: true, solT: true, speakText: s[0], bigSpeaker: true, hint: s[1] });
+    };
+    // Erst ein paar Beispiele bauen, dann alle Lückensätze, auf höherer Stufe auch Hören und Schreiben
+    const list = [build("D"), build("T")];
+    const drills = shuffle(lesson.drills).map(drillExercise);
+    list.push(...drills.slice(0, 4), build("T"), ...drills.slice(4));
+    if (boost >= 1) list.push(build("L"));
+    if (boost >= 2) {
+      const s = nextEx();
+      list.push(zh
+        ? build("L")
+        : { type: "type", prompt: "Schreib den Satz, den du hörst", speakText: s[0], bigSpeaker: true, answer: s[0], solT: true, hint: s[1], accents: true });
+    }
+    return list;
   }
 
   function uniquePairs(words, n) {
@@ -440,9 +496,11 @@
       <header class="topbar">
         <button class="lang-switch" data-action="choose-lang" aria-label="Sprache wechseln">${c ? c.flag : "🌍"}</button>
         <div class="stats">
+          <span class="stat${todayXp() >= state.goal ? " goal-done" : ""}" title="Tagesziel">🎯 ${Math.min(todayXp(), state.goal)}/${state.goal}</span>
           <span class="stat" title="Tage in Folge">🔥 ${currentStreak()}</span>
-          <span class="stat" title="Erfahrungspunkte">⭐ ${state.xp} XP</span>
+          <span class="stat" title="Erfahrungspunkte">⭐ ${state.xp}</span>
         </div>
+        <button class="gear" data-action="settings" aria-label="Einstellungen">⚙️</button>
       </header>`;
   }
 
@@ -500,6 +558,11 @@
     return "★".repeat(n) + "☆".repeat(total - n);
   }
 
+  // Erste Lektion, die frei, aber noch nicht geschafft ist
+  function nextLessonIndex(lessons) {
+    return lessons.findIndex((l, idx) => !state.done[l.id] && (idx === 0 || state.done[lessons[idx - 1].id]));
+  }
+
   function showHome() {
     if (!state.lang) return showLanguageChoice();
     const c = course();
@@ -508,6 +571,9 @@
     const doneCount = doneLessons.length;
     if (!state.placed[state.lang] && doneCount === 0) return showLevelChoice();
     const weak = weakWords(c);
+    const nextIdx = nextLessonIndex(lessons);
+    const next = lessons[nextIdx];
+    const mastered = lessons.filter((l) => mastery(l) >= 3).length;
     let i = 0;
 
     app.innerHTML = `
@@ -519,49 +585,274 @@
             <div class="bar"><div class="fill" style="width:${(doneCount / lessons.length) * 100}%"></div></div>
             <span>${doneCount} von ${lessons.length} Lektionen</span>
           </div>
-          ${doneCount >= 2 ? `
-          <button class="review-card" data-action="review">
-            <span class="icon">🔁</span>
-            <span><b>Wiederholen</b><small>${weak.length
-              ? `Übt vor allem ${weak.length} ${weak.length === 1 ? "Wort, das" : "Wörter, die"} dir noch schwerfallen`
-              : "Gemischte Übungen aus allem, was du schon kannst"}</small></span>
-          </button>` : ""}
+          ${next ? `
+          <button class="continue-card" data-action="continue">
+            <span class="icon">▶</span>
+            <span><b>${doneCount ? "Weiterlernen" : "Loslegen"}</b><small>Teil ${next.unit + 1} · ${esc(next.title)}</small></span>
+          </button>` : `
+          <div class="continue-card all-done">
+            <span class="icon">🏆</span>
+            <span><b>Alle Lektionen geschafft!</b><small>${mastered} von ${lessons.length} gemeistert (★★★). Spiel Lektionen noch einmal für mehr Sterne.</small></span>
+          </div>`}
+          <div class="home-actions">
+            ${doneCount >= 2 ? `
+            <button class="review-card" data-action="review">
+              <span class="icon">🔁</span>
+              <span><b>Wiederholen</b><small>${weak.length
+                ? `Übt vor allem ${weak.length} ${weak.length === 1 ? "Wort, das" : "Wörter, die"} dir noch schwerfallen`
+                : "Gemischte Übungen aus allem, was du schon kannst"}</small></span>
+            </button>` : ""}
+            <button class="review-card" data-action="grammar">
+              <span class="icon">📘</span>
+              <span><b>Grammatik</b><small>Alle Regeln zum Nachlesen</small></span>
+            </button>
+          </div>
         </section>
-        ${c.units.map((unit, u) => `
+        ${c.units.map((unit, u) => {
+          const firstIdx = lessons.indexOf(unit.lessons[0]);
+          const unitLocked = firstIdx > 0 && !state.done[lessons[firstIdx - 1].id] && !state.done[unit.lessons[0].id];
+          return `
           <section class="unit unit-c${u % 5}">
             <div class="unit-head">
               <span class="unit-no">Teil ${u + 1}</span>
               <span class="unit-title">${esc(unit.title)}</span>
               <span class="unit-stars" title="Schwierigkeit">${stars(u + 1, c.units.length)}</span>
+              ${unitLocked ? `<button class="jump" data-jump="${firstIdx}">Hierhin springen</button>` : ""}
             </div>
             <ol class="path">
               ${unit.lessons.map((l) => {
                 const idx = i++;
                 const done = !!state.done[l.id];
-                const unlocked = idx === 0 || !!state.done[lessons[idx - 1].id];
-                const cls = done ? "done" : unlocked ? "open" : "locked";
+                const unlocked = idx === 0 || done || !!state.done[lessons[idx - 1].id];
+                const cls = (done ? "done" : unlocked ? "open" : "locked") + (l.grammar ? " grammar" : "") + (mastery(l) >= 3 ? " mastered" : "");
                 return `
                   <li class="node ${cls}" style="--offset:${[0, 1, 2, 1, 0, -1, -2, -1][idx % 8]}">
-                    <button data-lesson="${idx}" ${unlocked ? "" : "disabled"} aria-label="${esc(l.title)}">
+                    <button data-lesson="${idx}" aria-label="${esc(l.title)}${unlocked ? "" : " (gesperrt)"}">
                       <span class="icon">${unlocked ? l.icon : "🔒"}</span>
                     </button>
-                    <span class="label">${esc(l.title)}${done ? " ✓" : ""}</span>
+                    <span class="label">${esc(l.title)}</span>
+                    ${done ? `<span class="mstars" title="Stufe">${stars(mastery(l), 3)}</span>` : ""}
                   </li>`;
               }).join("")}
             </ol>
-          </section>`).join("")}
+          </section>`;
+        }).join("")}
       </main>`;
 
-    app.querySelector("[data-action=choose-lang]").addEventListener("click", showLanguageChoice);
+    wireHeader();
     app.querySelectorAll("[data-lesson]").forEach((b) =>
-      b.addEventListener("click", () => startLesson(lessons[Number(b.dataset.lesson)]))
+      b.addEventListener("click", () => {
+        const idx = Number(b.dataset.lesson);
+        const l = lessons[idx];
+        const unlocked = idx === 0 || state.done[l.id] || state.done[lessons[idx - 1].id];
+        if (unlocked) startLesson(l);
+        else showJumpSheet(idx);
+      })
     );
+    app.querySelectorAll("[data-jump]").forEach((b) => b.addEventListener("click", () => showJumpSheet(Number(b.dataset.jump))));
+    const cont = app.querySelector("[data-action=continue]");
+    if (cont) cont.addEventListener("click", () => startLesson(next));
     const rv = app.querySelector("[data-action=review]");
     if (rv) rv.addEventListener("click", () => startLesson(reviewLesson(c, doneLessons, weak)));
+    app.querySelector("[data-action=grammar]").addEventListener("click", showGrammarOverview);
 
     // Zur aktuellen Lektion scrollen
     const current = app.querySelector(".node.open");
     if (current && doneCount > 2) current.scrollIntoView({ block: "center" });
+  }
+
+  function wireHeader() {
+    app.querySelector("[data-action=choose-lang]").addEventListener("click", showLanguageChoice);
+    app.querySelector("[data-action=settings]").addEventListener("click", showSettings);
+  }
+
+  // ---------- Später einsteigen: gesperrte Lektion antippen ----------
+
+  function showJumpSheet(idx) {
+    const c = course();
+    const target = c.lessons[idx];
+    const sheet = document.createElement("div");
+    sheet.className = "sheet-bg";
+    sheet.innerHTML = `
+      <div class="sheet" role="dialog" aria-label="Lektion gesperrt">
+        <div class="logo">🔒</div>
+        <h2>${esc(target.title)}</h2>
+        <p class="sub">Teil ${target.unit + 1}: ${esc(c.units[target.unit].title)}</p>
+        <p>Du kannst schon etwas? Mach einen kurzen Test mit 10 Fragen zu allem davor. Mit 8 richtigen Antworten springst du direkt hierher.</p>
+        <button class="btn primary" data-action="jump-test">🎓 Test machen</button>
+        <button class="btn secondary" data-action="jump-open">Trotzdem öffnen</button>
+        <button class="link" data-action="jump-cancel">Abbrechen</button>
+      </div>`;
+    app.appendChild(sheet);
+    const close = () => sheet.remove();
+    sheet.addEventListener("click", (e) => { if (e.target === sheet) close(); });
+    sheet.querySelector("[data-action=jump-cancel]").addEventListener("click", close);
+    sheet.querySelector("[data-action=jump-open]").addEventListener("click", () => { close(); startLesson(target); });
+    sheet.querySelector("[data-action=jump-test]").addEventListener("click", () => { close(); startJumpTest(idx); });
+    sheet.querySelector("[data-action=jump-test]").focus();
+  }
+
+  // 10 Fragen aus allem vor der Ziel-Lektion, mehr aus den letzten Lektionen davor
+  function startJumpTest(idx) {
+    const c = course();
+    const before = c.lessons.slice(0, idx);
+    const recent = before.slice(-12);
+    const allWords = [].concat(...before.map((l) => l.words));
+    const recentWords = [].concat(...recent.map((l) => l.words));
+    const drills = [].concat(...before.map((l) => l.drills || []));
+    const words = [];
+    const seen = new Set();
+    const take = (list, n) => { for (const w of shuffle(list)) { if (n <= 0) break; if (!seen.has(w[0])) { seen.add(w[0]); words.push(w); n--; } } };
+    const nDrills = Math.min(drills.length ? 2 : 0, drills.length);
+    take(recentWords, 6 - nDrills);
+    take(allWords, 10 - nDrills - words.length);
+    const queue = words.map((w, k) => (k % 2 === 0
+      ? { type: "choice", prompt: "Was bedeutet das?", show: w[0], showT: true, speakText: w[0], answer: w[1],
+          options: shuffle([w[1]].concat(distractors(w[1], allWords.map((x) => x[1]), 3))) }
+      : { type: "choice", prompt: "Wie sagt man das?", show: w[1], answer: w[0], optT: true, solT: true,
+          options: shuffle([w[0]].concat(distractors(w[0], allWords.map((x) => x[0]), 3))) }));
+    pick(drills, nDrills).forEach((d) => queue.splice(randInt(0, queue.length), 0, drillExercise(d)));
+    const session = { test: true, jump: true, target: idx, lesson: { id: "jump", title: "Einstiegstest" }, voice: c.voice,
+      queue: shuffle(queue), total: queue.length, solved: 0, mistakes: 0, correct: 0 };
+    showExercise(session);
+  }
+
+  function showJumpResult(session) {
+    const c = course();
+    const target = c.lessons[session.target];
+    const need = Math.ceil(session.total * 0.8);
+    const passed = session.correct >= need;
+    if (passed) {
+      c.lessons.slice(0, session.target).forEach((l) => { if (!state.done[l.id]) state.done[l.id] = 1; });
+      state.placed[state.lang] = true;
+      saveState();
+    }
+    app.innerHTML = `
+      <main class="screen center result">
+        <div class="logo">${passed ? "🎓" : "💪"}</div>
+        <h1>${passed ? "Bestanden!" : "Noch nicht ganz"}</h1>
+        <p class="sub">${session.correct} von ${session.total} richtig.</p>
+        <p class="sub">${passed
+          ? `Alles bis „${esc(target.title)}“ ist jetzt freigeschaltet. Du kannst die Lektionen davor jederzeit wiederholen.`
+          : `Für den Sprung brauchst du ${need} richtige Antworten. Du kannst die Lektion trotzdem öffnen oder es später noch einmal versuchen.`}</p>
+        ${passed
+          ? `<button class="btn primary" data-action="go">Lektion starten</button>`
+          : `<button class="btn primary" data-action="go">Trotzdem öffnen</button>`}
+        <button class="link" data-action="home">Zur Übersicht</button>
+      </main>`;
+    app.querySelector("[data-action=go]").addEventListener("click", () => startLesson(target));
+    app.querySelector("[data-action=home]").addEventListener("click", showHome);
+  }
+
+  // ---------- Grammatik-Übersicht ----------
+
+  function showGrammarOverview() {
+    const c = course();
+    const list = c.lessons.filter((l) => l.grammar);
+    app.innerHTML = `
+      ${headerHtml()}
+      <main class="screen">
+        <button class="link back" data-action="home">← Zurück</button>
+        <h1>📘 Grammatik ${c.flag}</h1>
+        <p class="sub">Alle Regeln auf einen Blick. Jede Regel hat eine eigene Lektion am Ende ihres Teils.</p>
+        ${list.map((l, k) => `
+          <details class="grammar-card"${k === 0 ? " open" : ""}>
+            <summary><span>${state.done[l.id] ? "✅" : "📘"}</span> <b>${esc(l.title.replace(/^Grammatik: /, ""))}</b> <small>Teil ${l.unit + 1}</small></summary>
+            ${l.explain.map((p) => `<p>${esc(p)}</p>`).join("")}
+            <ul class="examples">
+              ${l.sentences.map((s, j) => `
+                <li>
+                  <button class="speaker" data-say="${k}-${j}" aria-label="Anhören">🔊</button>
+                  <div><div class="ex-target">${renderTarget(s[0], true)}</div><div class="ex-german">${esc(s[1])}</div></div>
+                </li>`).join("")}
+            </ul>
+          </details>`).join("")}
+      </main>`;
+    wireHeader();
+    app.querySelector("[data-action=home]").addEventListener("click", showHome);
+    app.querySelectorAll("[data-say]").forEach((b) =>
+      b.addEventListener("click", () => {
+        const [k, j] = b.dataset.say.split("-").map(Number);
+        speak(list[k].sentences[j][0], c.voice);
+      })
+    );
+    window.scrollTo(0, 0);
+  }
+
+  // ---------- Einstellungen ----------
+
+  function exportCode() {
+    return btoa(unescape(encodeURIComponent(JSON.stringify(state))));
+  }
+
+  function importCode(code) {
+    try {
+      const data = JSON.parse(decodeURIComponent(escape(atob(code.trim()))));
+      if (typeof data !== "object" || !data || typeof data.done !== "object") return false;
+      state = Object.assign(defaultState(), data);
+      saveState();
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function showSettings(msg) {
+    const c = state.lang ? course() : null;
+    app.innerHTML = `
+      ${headerHtml()}
+      <main class="screen settings">
+        <button class="link back" data-action="home">← Zurück</button>
+        <h1>⚙️ Einstellungen</h1>
+        ${typeof msg === "string" ? `<p class="notice">${esc(msg)}</p>` : ""}
+
+        <section class="set-block">
+          <h2>🎯 Tagesziel</h2>
+          <p class="sub">Wie viele Punkte (XP) möchtest du pro Tag sammeln? Eine Lektion bringt etwa 10 bis 30 XP.</p>
+          <div class="goal-list">
+            ${[[20, "Locker"], [30, "Normal"], [50, "Ehrgeizig"], [80, "Intensiv"]].map(([g, name]) => `
+              <button class="chip goal${state.goal === g ? " selected" : ""}" data-goal="${g}">${name}<small>${g} XP</small></button>`).join("")}
+          </div>
+        </section>
+
+        ${c ? `
+        <section class="set-block">
+          <h2>🎓 Einstieg ${c.flag}</h2>
+          <p class="sub">Du kannst schon mehr? Mach den Einstufungstest noch einmal. Geschaffte Lektionen bleiben geschafft.</p>
+          <button class="btn secondary" data-action="placement">Einstufungstest machen</button>
+        </section>` : ""}
+
+        <section class="set-block">
+          <h2>💾 Fortschritt mitnehmen</h2>
+          <p class="sub">Dein Fortschritt ist nur auf diesem Gerät gespeichert. Mit diesem Code kannst du ihn auf ein anderes Gerät (z. B. vom Handy auf den Computer) übertragen.</p>
+          <textarea class="code" readonly rows="3" aria-label="Dein Fortschritts-Code">${exportCode()}</textarea>
+          <button class="btn secondary" data-action="copy">Code kopieren</button>
+          <p class="sub" style="margin-top:14px">Auf dem neuen Gerät hier den Code einfügen:</p>
+          <textarea class="code" data-role="import" rows="3" placeholder="Code hier einfügen …" aria-label="Code einfügen"></textarea>
+          <button class="btn secondary" data-action="import">Fortschritt übernehmen</button>
+        </section>
+      </main>`;
+    wireHeader();
+    app.querySelector("[data-action=home]").addEventListener("click", showHome);
+    app.querySelectorAll("[data-goal]").forEach((b) =>
+      b.addEventListener("click", () => { state.goal = Number(b.dataset.goal); saveState(); showSettings("Tagesziel gespeichert."); })
+    );
+    const pl = app.querySelector("[data-action=placement]");
+    if (pl) pl.addEventListener("click", startPlacement);
+    app.querySelector("[data-action=copy]").addEventListener("click", (e) => {
+      const ta = app.querySelector("textarea.code");
+      ta.select();
+      const done = () => { e.target.textContent = "Kopiert ✓"; };
+      if (navigator.clipboard) navigator.clipboard.writeText(ta.value).then(done, () => { document.execCommand("copy"); done(); });
+      else { document.execCommand("copy"); done(); }
+    });
+    app.querySelector("[data-action=import]").addEventListener("click", () => {
+      const val = app.querySelector("[data-role=import]").value;
+      if (!val.trim()) return;
+      if (importCode(val)) showSettings("Fortschritt übernommen! 🎉");
+      else showSettings("Der Code hat nicht funktioniert. Bitte genau so einfügen, wie er kopiert wurde.");
+    });
+    window.scrollTo(0, 0);
   }
 
   // Eine "Lektion" aus allem, was schon gelernt wurde. Schwierige Wörter kommen öfter dran.
@@ -578,6 +869,7 @@
       sentences: [].concat(...doneLessons.map((l) => l.sentences)),
       numbers: ranges.length ? [0, Math.max(...ranges.map((r) => r[1]))] : null,
       pool: doneLessons,
+      drills: [].concat(...doneLessons.map((l) => l.drills || [])),
     };
   }
 
@@ -598,7 +890,7 @@
               options: shuffle([w[0]].concat(distractors(w[0], words.map((x) => x[0]), 3))) });
       });
     });
-    const session = { placement: true, lesson: { id: "placement", title: "Einstufungstest" }, voice: c.voice, queue, total: queue.length,
+    const session = { test: true, placement: true, correct: 0, lesson: { id: "placement", title: "Einstufungstest" }, voice: c.voice, queue, total: queue.length,
       solved: 0, mistakes: 0, results: units.map(() => 0), units };
     showExercise(session);
   }
@@ -628,10 +920,13 @@
 
   function startLesson(lesson) {
     const c = course();
+    // Schon geschafft? Dann eine Stufe schwerer (bis Stufe 3)
+    const boost = lesson.isReview ? 0 : Math.min(state.done[lesson.id] || 0, 2);
     const session = {
       lesson,
+      boost,
       voice: c.voice,
-      queue: buildExercises(lesson, c, state.lang),
+      queue: buildExercises(lesson, c, state.lang, boost),
       total: 0,
       solved: 0,
       mistakes: 0,
@@ -647,7 +942,8 @@
   function showIntro(session) {
     const lesson = session.lesson;
     const steps = [];
-    if (lesson.tip) steps.push({ kind: "tip" });
+    if (lesson.grammar) steps.push({ kind: "grammar" });
+    else if (lesson.tip) steps.push({ kind: "tip" });
     lesson.words.forEach((w) => steps.push({ kind: "word", w }));
     if (lesson.sentences.length) steps.push({ kind: "sentences" });
     let i = 0;
@@ -656,7 +952,11 @@
       const step = steps[i];
       const wordNo = steps.slice(0, i + 1).filter((s) => s.kind === "word").length;
       let badge = "", body = "";
-      if (step.kind === "tip") {
+      if (step.kind === "grammar") {
+        badge = `<span class="badge grammar">📘 Grammatik</span>`;
+        body = `<h2 class="prompt">${esc(lesson.title.replace(/^Grammatik: /, ""))}</h2>
+          <div class="grammar-text">${lesson.explain.map((p) => `<p>${esc(p)}</p>`).join("")}</div>`;
+      } else if (step.kind === "tip") {
         badge = `<span class="badge tip">💡 Tipp</span>`;
         body = `<h2 class="prompt">${esc(lesson.title)}</h2><p class="tip-text">${esc(lesson.tip)}</p>`;
       } else if (step.kind === "word") {
@@ -668,7 +968,7 @@
             <div class="fc-german">${esc(step.w[1])}</div>
           </div>`;
       } else {
-        badge = `<span class="badge new">📝 Beispielsätze</span>`;
+        badge = `<span class="badge new">📝 ${lesson.grammar ? "So sieht es aus" : "Beispielsätze"}</span>`;
         body = `
           <p class="hint">Tipp: Tippe auf ein Wort, um die Übersetzung zu sehen.</p>
           <ul class="examples">
@@ -715,17 +1015,20 @@
 
   function showExercise(session) {
     const ex = session.queue[0];
-    if (!ex) return session.placement ? showPlacementResult(session) : showResult(session);
+    if (!ex) return session.placement ? showPlacementResult(session) : session.jump ? showJumpResult(session) : showResult(session);
     window.__exercise = ex; // für automatische Tests
 
     let badge = "";
-    if (session.placement) badge = `<span class="badge tip">🎓 Einstufungstest · Frage ${session.solved + 1} von ${session.total}</span>`;
+    if (session.test) badge = `<span class="badge tip">🎓 ${session.jump ? "Einstiegstest" : "Einstufungstest"} · Frage ${session.solved + 1} von ${session.total}</span>`;
+    else if (ex.grammar) badge = `<span class="badge grammar">📘 Grammatik</span>`;
     else if (ex.review) badge = `<span class="badge">🔁 Wiederholung</span>`;
     else if (session.firstTime && ex.word && !session.seen.has(ex.word[0])) {
       session.seen.add(ex.word[0]);
       badge = `<span class="badge new">✨ NEU</span>`;
     }
     const tip = session.lesson.tip;
+    const tipHtml = session.lesson.grammar ? session.lesson.explain.map((p) => `<p>${esc(p)}</p>`).join("") : esc(tip);
+    const level = session.boost ? `<span class="level-tag" title="Stufe">Stufe ${session.boost + 1}</span>` : "";
 
     const pct = (session.solved / session.total) * 100;
     app.innerHTML = `
@@ -733,9 +1036,10 @@
         <div class="lesson-top">
           <button class="close" data-action="quit" aria-label="Lektion beenden">✕</button>
           <div class="bar"><div class="fill" style="width:${pct}%"></div></div>
+          ${level}
           ${tip ? `<button class="tip-btn" data-action="tip" aria-label="Tipp anzeigen">💡</button>` : ""}
         </div>
-        ${tip ? `<div class="tip-box" hidden>${esc(tip)}</div>` : ""}
+        ${tip ? `<div class="tip-box" hidden>${tipHtml}</div>` : ""}
         ${badge}
         <h2 class="prompt">${esc(ex.prompt)}</h2>
         <div class="exercise"></div>
@@ -811,13 +1115,16 @@
     const btn = app.querySelector("[data-action=check]");
     const footer = app.querySelector(".check-area");
     fb.hidden = false;
-    if (!session.placement) trackWord(ex.word, result.ok);
+    if (!session.test) trackWord(ex.word, result.ok);
     const solution = ex.solution || ex.answer;
     const solHtml = esc(ex.solT ? solutionText(solution) : solution);
 
-    if (session.placement) {
+    if (session.test) {
       // Im Test wird nichts wiederholt, jede Frage zählt einmal
-      if (result.ok) session.results[ex.unitIdx]++;
+      if (result.ok) {
+        session.correct++;
+        if (session.placement) session.results[ex.unitIdx]++;
+      }
       footer.classList.add(result.ok ? "good" : "bad");
       fb.innerHTML = result.ok ? "<strong>Richtig!</strong>" : `<strong>Nicht ganz.</strong><p>Richtig wäre: <b>${solHtml}</b></p>`;
       session.queue.shift();
@@ -1008,18 +1315,29 @@
   // ---------- Ergebnis ----------
 
   function showResult(session) {
-    const xp = finishLesson(session.lesson, session.mistakes);
+    const goalBefore = todayXp() >= state.goal;
+    const xp = finishLesson(session.lesson, session.mistakes, session.boost);
+    const goalNow = !goalBefore && todayXp() >= state.goal;
     const perfect = session.mistakes === 0;
     const accuracy = Math.round((session.total / (session.total + session.mistakes)) * 100);
+    const lesson = session.lesson;
+    const m = lesson.isReview ? 0 : mastery(lesson);
+    const levelText = ["", "Stufe 1 geschafft! Spiel sie noch einmal für Stufe 2 (schwerer).",
+      "Stufe 2 geschafft! Noch einmal, dann ist die Lektion gemeistert.", "Lektion gemeistert! 👑"][m];
     app.innerHTML = `
       <main class="screen center result">
-        <div class="logo">${perfect ? "🏆" : "🎉"}</div>
-        <h1>${session.lesson.isReview ? "Wiederholung geschafft!" : "Lektion geschafft!"}</h1>
-        <p class="sub">${esc(session.lesson.title)}</p>
+        <div class="logo">${goalNow ? "🎯" : perfect ? "🏆" : "🎉"}</div>
+        <h1>${lesson.isReview ? "Wiederholung geschafft!" : "Lektion geschafft!"}</h1>
+        <p class="sub">${esc(lesson.title)}</p>
+        ${m ? `<div class="big-stars" aria-label="${m} von 3 Sternen">${stars(m, 3)}</div><p class="sub">${levelText}</p>` : ""}
         <div class="result-stats">
           <div class="pill"><span>⭐</span><b>+${xp} XP</b>${perfect ? "<small>Ohne Fehler: +5 Bonus</small>" : ""}</div>
           <div class="pill"><span>🎯</span><b>${accuracy} %</b><small>richtig</small></div>
           <div class="pill"><span>🔥</span><b>${currentStreak()} ${currentStreak() === 1 ? "Tag" : "Tage"}</b><small>in Folge</small></div>
+        </div>
+        <div class="goal-line">
+          <div class="bar"><div class="fill" style="width:${Math.min(100, (todayXp() / state.goal) * 100)}%"></div></div>
+          <span>${goalNow ? "Tagesziel erreicht! 🎉" : todayXp() >= state.goal ? "Tagesziel schon erreicht ✓" : `Tagesziel: ${todayXp()} von ${state.goal} XP`}</span>
         </div>
         <button class="btn primary" data-action="home">Weiter</button>
       </main>`;

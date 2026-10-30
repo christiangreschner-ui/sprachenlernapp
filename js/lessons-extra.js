@@ -1,0 +1,197 @@
+// Weitere Teile für alle drei Sprachen (ab Version 4).
+// Gleiche Schreibweise wie in lessons.js / lessons-zh.js.
+
+(function () {
+  const L = window.makeLesson;
+  const C = window.COURSES;
+
+  // ---------- Spanisch: Teil 6 und 7 ----------
+  C.es.units.push(
+    {
+      title: "Alltag vertiefen",
+      lessons: [
+        L("es-31", "Tagesablauf", "☕",
+          "despertarse = aufwachen; levantarse = aufstehen; ducharse = duschen; desayunar = frühstücken; almorzar = zu Mittag essen; cenar = zu Abend essen; acostarse = ins Bett gehen; siempre = immer",
+          "Me despierto a las siete = Ich wache um sieben auf | Desayuno pan con queso = Ich frühstücke Brot mit Käse | Siempre ceno en casa = Ich esse immer zu Hause zu Abend | Me acuesto a las once = Ich gehe um elf ins Bett"),
+        L("es-32", "Schule & Lernen", "🎒",
+          "escuela = Schule; libro = Buch; cuaderno = Heft; lápiz = Bleistift; examen = Prüfung; pregunta = Frage; respuesta = Antwort; aprender = lernen",
+          "Tengo un examen mañana = Ich habe morgen eine Prüfung | ¿Puedo hacer una pregunta? = Darf ich eine Frage stellen? | Aprendo español en la escuela = Ich lerne Spanisch in der Schule | La respuesta es correcta = Die Antwort ist richtig"),
+        L("es-33", "Haushalt", "🧹",
+          "limpiar = putzen; lavar = waschen; ropa = Wäsche; basura = Müll; ventana = Fenster; suelo = Boden; planchar = bügeln; ayudar = helfen",
+          "Limpio la casa los sábados = Ich putze samstags das Haus | ¿Puedes sacar la basura? = Kannst du den Müll rausbringen? | Lavo la ropa = Ich wasche die Wäsche | Mi hijo me ayuda = Mein Sohn hilft mir"),
+        L("es-34", "Freunde treffen", "🥳",
+          "amigo = Freund; fiesta = Party; invitar = einladen; quedar = sich verabreden; juntos = zusammen; divertido = lustig; regalo = Geschenk; cumpleaños = Geburtstag",
+          "Mañana hay una fiesta = Morgen gibt es eine Party | ¿Quedamos a las ocho? = Treffen wir uns um acht? | Te invito a un café = Ich lade dich auf einen Kaffee ein | El regalo es para ti = Das Geschenk ist für dich"),
+        L("es-35", "Handy & Internet", "📱",
+          "teléfono = Telefon; móvil = Handy; correo = E-Mail; contraseña = Passwort; pantalla = Bildschirm; llamar = anrufen; mensaje = Nachricht; internet = Internet",
+          "Te llamo más tarde = Ich rufe dich später an | Mi móvil no funciona = Mein Handy funktioniert nicht | Te mando un mensaje = Ich schicke dir eine Nachricht | Olvidé mi contraseña = Ich habe mein Passwort vergessen"),
+        L("es-36", "Beim Arzt", "🏥",
+          "fiebre = Fieber; tos = Husten; resfriado = Erkältung; receta = Rezept; farmacia = Apotheke; pastilla = Tablette; enfermo = krank; sano = gesund",
+          "Tengo fiebre y tos = Ich habe Fieber und Husten | Estoy enfermo desde ayer = Ich bin seit gestern krank | La farmacia está cerrada = Die Apotheke ist geschlossen | Toma una pastilla cada día = Nimm jeden Tag eine Tablette"),
+      ],
+    },
+    {
+      title: "Welt & Gesellschaft",
+      lessons: [
+        L("es-37", "Feste & Feiertage", "🎉",
+          "Navidad = Weihnachten; Año Nuevo = Neujahr; celebrar = feiern; tradición = Tradition; fuegos artificiales = Feuerwerk; boda = Hochzeit; felicidades = Glückwunsch; vela = Kerze",
+          "¡Feliz Navidad! = Frohe Weihnachten! | Celebramos el Año Nuevo con la familia = Wir feiern Neujahr mit der Familie | La boda es en junio = Die Hochzeit ist im Juni | ¡Felicidades por tu cumpleaños! = Herzlichen Glückwunsch zum Geburtstag!"),
+        L("es-38", "Verkehr", "🚗",
+          "coche = Auto; autobús = Bus; bicicleta = Fahrrad; semáforo = Ampel; conducir = fahren; parar = anhalten; tráfico = Verkehr; lejos = weit weg",
+          "Voy al trabajo en bicicleta = Ich fahre mit dem Fahrrad zur Arbeit | Hay mucho tráfico hoy = Heute ist viel Verkehr | Para en el semáforo = Halte an der Ampel an | El aeropuerto está lejos = Der Flughafen ist weit weg"),
+        L("es-39", "Medien & Nachrichten", "📰",
+          "periódico = Zeitung; noticias = Nachrichten; radio = Radio; televisión = Fernsehen; artículo = Artikel; película = Film; serie = Serie; escuchar = hören",
+          "Leo el periódico cada mañana = Ich lese jeden Morgen die Zeitung | ¿Has visto las noticias? = Hast du die Nachrichten gesehen? | Escucho la radio en el coche = Ich höre im Auto Radio | Esta serie es muy buena = Diese Serie ist sehr gut"),
+        L("es-40", "Umwelt", "🌍",
+          "medio ambiente = Umwelt; reciclar = recyceln; plástico = Plastik; energía = Energie; clima = Klima; proteger = schützen; contaminación = Verschmutzung; naturaleza = Natur",
+          "Tenemos que proteger el medio ambiente = Wir müssen die Umwelt schützen | Reciclo el plástico = Ich recycle das Plastik | El clima está cambiando = Das Klima verändert sich | La contaminación es un problema = Die Verschmutzung ist ein Problem"),
+        L("es-41", "Bank & Geld", "💶",
+          "cuenta bancaria = Bankkonto; cajero = Geldautomat; efectivo = Bargeld; ahorrar = sparen; gastar = ausgeben; cambiar = wechseln; moneda = Münze; transferencia = Überweisung",
+          "¿Dónde hay un cajero? = Wo gibt es einen Geldautomaten? | ¿Puedo pagar en efectivo? = Kann ich bar bezahlen? | Quiero ahorrar dinero = Ich möchte Geld sparen | Gasto mucho en comida = Ich gebe viel für Essen aus"),
+        L("es-42", "Wohnung suchen", "🔑",
+          "piso = Wohnung; alquiler = Miete; vecino = Nachbar; llave = Schlüssel; ascensor = Aufzug; balcón = Balkon; mudarse = umziehen; amueblado = möbliert",
+          "Busco un piso en el centro = Ich suche eine Wohnung im Zentrum | El alquiler es muy caro = Die Miete ist sehr teuer | Mi vecino es muy amable = Mein Nachbar ist sehr freundlich | Nos mudamos en marzo = Wir ziehen im März um"),
+      ],
+    }
+  );
+
+  // ---------- Französisch: Teil 6 und 7 ----------
+  C.fr.units.push(
+    {
+      title: "Alltag vertiefen",
+      lessons: [
+        L("fr-31", "Tagesablauf", "☕",
+          "se réveiller = aufwachen; se lever = aufstehen; se doucher = duschen; petit-déjeuner = Frühstück; déjeuner = Mittagessen; dîner = Abendessen; se coucher = ins Bett gehen; toujours = immer",
+          "Je me réveille à sept heures = Ich wache um sieben Uhr auf | Je prends le petit-déjeuner à huit heures = Ich frühstücke um acht Uhr | Je dîne toujours à la maison = Ich esse immer zu Hause zu Abend | Je me couche à onze heures = Ich gehe um elf Uhr ins Bett"),
+        L("fr-32", "Schule & Lernen", "🎒",
+          "école = Schule; livre = Buch; cahier = Heft; crayon = Bleistift; examen = Prüfung; question = Frage; réponse = Antwort; apprendre = lernen",
+          "J'ai un examen demain = Ich habe morgen eine Prüfung | Je peux poser une question ? = Darf ich eine Frage stellen? | J'apprends le français à l'école = Ich lerne Französisch in der Schule | La réponse est correcte = Die Antwort ist richtig"),
+        L("fr-33", "Haushalt", "🧹",
+          "nettoyer = putzen; laver = waschen; linge = Wäsche; poubelle = Mülleimer; fenêtre = Fenster; sol = Boden; repasser = bügeln; aider = helfen",
+          "Je nettoie la maison le samedi = Ich putze samstags das Haus | Tu peux sortir la poubelle ? = Kannst du den Müll rausbringen? | Je lave le linge = Ich wasche die Wäsche | Mon fils m'aide = Mein Sohn hilft mir"),
+        L("fr-34", "Freunde treffen", "🥳",
+          "ami = Freund; fête = Party; inviter = einladen; se retrouver = sich treffen; ensemble = zusammen; drôle = lustig; cadeau = Geschenk; anniversaire = Geburtstag",
+          "Demain il y a une fête = Morgen gibt es eine Party | On se retrouve à huit heures ? = Treffen wir uns um acht Uhr? | Je t'invite au café = Ich lade dich ins Café ein | Le cadeau est pour toi = Das Geschenk ist für dich"),
+        L("fr-35", "Handy & Internet", "📱",
+          "téléphone = Telefon; portable = Handy; e-mail = E-Mail; mot de passe = Passwort; écran = Bildschirm; appeler = anrufen; message = Nachricht; internet = Internet",
+          "Je t'appelle plus tard = Ich rufe dich später an | Mon portable ne marche pas = Mein Handy funktioniert nicht | Je t'envoie un message = Ich schicke dir eine Nachricht | J'ai oublié mon mot de passe = Ich habe mein Passwort vergessen"),
+        L("fr-36", "Beim Arzt", "🏥",
+          "fièvre = Fieber; toux = Husten; rhume = Erkältung; ordonnance = Rezept; pharmacie = Apotheke; comprimé = Tablette; malade = krank; en bonne santé = gesund",
+          "J'ai de la fièvre = Ich habe Fieber | Je suis malade depuis hier = Ich bin seit gestern krank | La pharmacie est fermée = Die Apotheke ist geschlossen | Prenez un comprimé par jour = Nehmen Sie eine Tablette pro Tag"),
+      ],
+    },
+    {
+      title: "Welt & Gesellschaft",
+      lessons: [
+        L("fr-37", "Feste & Feiertage", "🎉",
+          "Noël = Weihnachten; Nouvel An = Neujahr; fêter = feiern; tradition = Tradition; feu d'artifice = Feuerwerk; mariage = Hochzeit; félicitations = Glückwunsch; bougie = Kerze",
+          "Joyeux Noël ! = Frohe Weihnachten! | Nous fêtons le Nouvel An en famille = Wir feiern Neujahr mit der Familie | Le mariage est en juin = Die Hochzeit ist im Juni | Joyeux anniversaire ! = Alles Gute zum Geburtstag!"),
+        L("fr-38", "Verkehr", "🚗",
+          "voiture = Auto; bus = Bus; vélo = Fahrrad; feu = Ampel; conduire = fahren; s'arrêter = anhalten; circulation = Verkehr; loin = weit weg",
+          "Je vais au travail à vélo = Ich fahre mit dem Fahrrad zur Arbeit | Il y a beaucoup de circulation aujourd'hui = Heute ist viel Verkehr | Arrête-toi au feu = Halte an der Ampel an | L'aéroport est loin = Der Flughafen ist weit weg"),
+        L("fr-39", "Medien & Nachrichten", "📰",
+          "journal = Zeitung; informations = Nachrichten; radio = Radio; télévision = Fernsehen; article = Artikel; film = Film; série = Serie; écouter = hören",
+          "Je lis le journal chaque matin = Ich lese jeden Morgen die Zeitung | Tu as vu les informations ? = Hast du die Nachrichten gesehen? | J'écoute la radio dans la voiture = Ich höre im Auto Radio | Cette série est très bonne = Diese Serie ist sehr gut"),
+        L("fr-40", "Umwelt", "🌍",
+          "environnement = Umwelt; recycler = recyceln; plastique = Plastik; énergie = Energie; climat = Klima; protéger = schützen; pollution = Verschmutzung; nature = Natur",
+          "Nous devons protéger l'environnement = Wir müssen die Umwelt schützen | Je recycle le plastique = Ich recycle das Plastik | Le climat change = Das Klima verändert sich | La pollution est un problème = Die Verschmutzung ist ein Problem"),
+        L("fr-41", "Bank & Geld", "💶",
+          "compte bancaire = Bankkonto; distributeur = Geldautomat; espèces = Bargeld; économiser = sparen; dépenser = ausgeben; changer = wechseln; pièce = Münze; virement = Überweisung",
+          "Où est le distributeur ? = Wo ist der Geldautomat? | Je peux payer en espèces ? = Kann ich bar bezahlen? | Je veux économiser de l'argent = Ich möchte Geld sparen | Je dépense beaucoup pour la nourriture = Ich gebe viel für Essen aus"),
+        L("fr-42", "Wohnung suchen", "🔑",
+          "appartement = Wohnung; loyer = Miete; voisin = Nachbar; ascenseur = Aufzug; balcon = Balkon; déménager = umziehen; meublé = möbliert; quartier = Viertel",
+          "Je cherche un appartement au centre = Ich suche eine Wohnung im Zentrum | Le loyer est très cher = Die Miete ist sehr teuer | Mon voisin est très gentil = Mein Nachbar ist sehr nett | Nous déménageons en mars = Wir ziehen im März um"),
+      ],
+    }
+  );
+
+  // ---------- Chinesisch: Teil 5 und 6 ----------
+  C.zh.units.push(
+    {
+      title: "Alltag vertiefen",
+      lessons: [
+        L("zh-25", "Tagesablauf", "☕",
+          "起床 = qǐchuáng = aufstehen; 睡觉 = shuìjiào = schlafen; 早饭 = zǎofàn = Frühstück; 午饭 = wǔfàn = Mittagessen; 晚饭 = wǎnfàn = Abendessen; 洗澡 = xǐzǎo = duschen; 每天 = měitiān = jeden Tag; 晚上 = wǎnshang = Abend",
+          "我 每天 七 点 起床 = wǒ měitiān qī diǎn qǐchuáng = Ich stehe jeden Tag um sieben auf | 你 吃 早饭 了 吗？ = nǐ chī zǎofàn le ma? = Hast du schon gefrühstückt? | 晚上 我 十一 点 睡觉 = wǎnshang wǒ shíyī diǎn shuìjiào = Abends gehe ich um elf schlafen | 我 早上 洗澡 = wǒ zǎoshang xǐzǎo = Ich dusche morgens"),
+        L("zh-26", "Schule & Lernen", "🎒",
+          "学校 = xuéxiào = Schule; 书 = shū = Buch; 汉字 = hànzì = Schriftzeichen; 考试 = kǎoshì = Prüfung; 问题 = wèntí = Frage; 回答 = huídá = antworten; 懂 = dǒng = verstehen; 写 = xiě = schreiben",
+          "我 不 懂 = wǒ bù dǒng = Ich verstehe nicht | 汉字 很 难 = hànzì hěn nán = Schriftzeichen sind schwer | 明天 有 考试 = míngtiān yǒu kǎoshì = Morgen gibt es eine Prüfung | 我 有 一 个 问题 = wǒ yǒu yí ge wèntí = Ich habe eine Frage"),
+        L("zh-27", "Freunde & Feiern", "🥳",
+          "朋友 = péngyou = Freund; 生日 = shēngrì = Geburtstag; 礼物 = lǐwù = Geschenk; 快乐 = kuàilè = fröhlich; 一起 = yìqǐ = zusammen; 聚会 = jùhuì = Party; 请客 = qǐngkè = einladen; 玩 = wán = spielen",
+          "生日 快乐！ = shēngrì kuàilè! = Alles Gute zum Geburtstag! | 我们 一起 去 吧 = wǒmen yìqǐ qù ba = Lass uns zusammen gehen | 今天 我 请客 = jīntiān wǒ qǐngkè = Heute lade ich ein | 这 是 给 你 的 礼物 = zhè shì gěi nǐ de lǐwù = Das ist ein Geschenk für dich"),
+        L("zh-28", "Handy & Internet", "📱",
+          "手机 = shǒujī = Handy; 电话 = diànhuà = Telefon; 网 = wǎng = Internet; 密码 = mìmǎ = Passwort; 短信 = duǎnxìn = SMS; 照片 = zhàopiàn = Foto; 充电 = chōngdiàn = aufladen; 发 = fā = schicken",
+          "我 给 你 打 电话 = wǒ gěi nǐ dǎ diànhuà = Ich rufe dich an | 我 的 手机 没 电 了 = wǒ de shǒujī méi diàn le = Mein Handy hat keinen Akku mehr | 密码 是 什么？ = mìmǎ shì shénme? = Wie lautet das Passwort? | 我 发 给 你 照片 = wǒ fā gěi nǐ zhàopiàn = Ich schicke dir das Foto"),
+        L("zh-29", "Beim Arzt", "🏥",
+          "感冒 = gǎnmào = Erkältung; 发烧 = fāshāo = Fieber haben; 咳嗽 = késou = husten; 药 = yào = Medizin; 药店 = yàodiàn = Apotheke; 舒服 = shūfu = sich wohlfühlen; 休息 = xiūxi = ausruhen; 生病 = shēngbìng = krank werden",
+          "我 感冒 了 = wǒ gǎnmào le = Ich bin erkältet | 我 有点 发烧 = wǒ yǒudiǎn fāshāo = Ich habe etwas Fieber | 我 不 舒服 = wǒ bù shūfu = Mir geht es nicht gut | 你 要 多 休息 = nǐ yào duō xiūxi = Du musst dich viel ausruhen"),
+        L("zh-30", "Haushalt", "🧹",
+          "打扫 = dǎsǎo = putzen; 做饭 = zuòfàn = kochen; 垃圾 = lājī = Müll; 窗户 = chuānghu = Fenster; 干净 = gānjìng = sauber; 脏 = zāng = schmutzig; 帮 = bāng = helfen; 洗衣服 = xǐ yīfu = Wäsche waschen",
+          "我 周末 打扫 房间 = wǒ zhōumò dǎsǎo fángjiān = Ich putze am Wochenende das Zimmer | 爸爸 在 做饭 = bàba zài zuòfàn = Papa kocht gerade | 你 能 帮 我 吗？ = nǐ néng bāng wǒ ma? = Kannst du mir helfen? | 厨房 很 干净 = chúfáng hěn gānjìng = Die Küche ist sehr sauber"),
+      ],
+    },
+    {
+      title: "Welt & Gesellschaft",
+      lessons: [
+        L("zh-31", "Feste", "🧧",
+          "春节 = Chūnjié = Frühlingsfest; 新年 = xīnnián = Neujahr; 红包 = hóngbāo = rotes Geldgeschenk; 月饼 = yuèbing = Mondkuchen; 中秋节 = Zhōngqiūjié = Mondfest; 过年 = guònián = Neujahr feiern; 放假 = fàngjià = frei haben; 祝 = zhù = wünschen",
+          "新年 快乐！ = xīnnián kuàilè! = Frohes neues Jahr! | 春节 我们 吃 饺子 = Chūnjié wǒmen chī jiǎozi = Zum Frühlingsfest essen wir Teigtaschen | 中秋节 吃 月饼 = Zhōngqiūjié chī yuèbing = Zum Mondfest isst man Mondkuchen | 祝 你 生日 快乐 = zhù nǐ shēngrì kuàilè = Ich wünsche dir alles Gute zum Geburtstag"),
+        L("zh-32", "Verkehr", "🚲",
+          "自行车 = zìxíngchē = Fahrrad; 公共汽车 = gōnggòng qìchē = Bus; 开车 = kāichē = Auto fahren; 红绿灯 = hónglǜdēng = Ampel; 堵车 = dǔchē = Stau; 远 = yuǎn = weit; 近 = jìn = nah; 站 = zhàn = Haltestelle",
+          "我 骑 自行车 上班 = wǒ qí zìxíngchē shàngbān = Ich fahre mit dem Fahrrad zur Arbeit | 今天 堵车 很 厉害 = jīntiān dǔchē hěn lìhai = Heute ist der Stau sehr schlimm | 机场 很 远 = jīchǎng hěn yuǎn = Der Flughafen ist weit weg | 下 一 站 是 北京 = xià yí zhàn shì Běijīng = Der nächste Halt ist Peking"),
+        L("zh-33", "Medien", "📺",
+          "新闻 = xīnwén = Nachrichten; 报纸 = bàozhǐ = Zeitung; 节目 = jiémù = Sendung; 网上 = wǎngshang = online; 视频 = shìpín = Video; 听 = tīng = hören; 看见 = kànjiàn = sehen; 有意思 = yǒu yìsi = interessant",
+          "我 每天 看 新闻 = wǒ měitiān kàn xīnwén = Ich schaue jeden Tag Nachrichten | 这 个 节目 很 有意思 = zhè ge jiémù hěn yǒuyìsi = Diese Sendung ist sehr interessant | 我 在 网上 看 视频 = wǒ zài wǎngshang kàn shìpín = Ich schaue online Videos | 你 听 音乐 吗？ = nǐ tīng yīnyuè ma? = Hörst du Musik?"),
+        L("zh-34", "Umwelt", "🌍",
+          "环境 = huánjìng = Umwelt; 保护 = bǎohù = schützen; 空气 = kōngqì = Luft; 污染 = wūrǎn = Verschmutzung; 塑料 = sùliào = Plastik; 节约 = jiéyuē = sparen; 能源 = néngyuán = Energie; 地球 = dìqiú = Erde",
+          "我们 要 保护 环境 = wǒmen yào bǎohù huánjìng = Wir müssen die Umwelt schützen | 今天 空气 不 好 = jīntiān kōngqì bù hǎo = Heute ist die Luft nicht gut | 污染 是 大 问题 = wūrǎn shì dà wèntí = Verschmutzung ist ein großes Problem | 请 节约 用 水 = qǐng jiéyuē yòng shuǐ = Bitte spar Wasser"),
+        L("zh-35", "Bank & Geld", "💴",
+          "银行 = yínháng = Bank; 现金 = xiànjīn = Bargeld; 信用卡 = xìnyòngkǎ = Kreditkarte; 换钱 = huànqián = Geld wechseln; 存钱 = cúnqián = Geld sparen; 花钱 = huāqián = Geld ausgeben; 付钱 = fùqián = bezahlen; 微信 = Wēixìn = WeChat",
+          "可以 用 信用卡 吗？ = kěyǐ yòng xìnyòngkǎ ma? = Kann man mit Kreditkarte zahlen? | 我 想 换钱 = wǒ xiǎng huànqián = Ich möchte Geld wechseln | 银行 几 点 开门？ = yínháng jǐ diǎn kāimén? = Wann öffnet die Bank? | 我 用 微信 付钱 = wǒ yòng Wēixìn fùqián = Ich zahle mit WeChat"),
+        L("zh-36", "Wohnen", "🔑",
+          "房子 = fángzi = Haus; 房租 = fángzū = Miete; 邻居 = línjū = Nachbar; 钥匙 = yàoshi = Schlüssel; 电梯 = diàntī = Aufzug; 楼 = lóu = Stockwerk; 搬家 = bānjiā = umziehen; 住 = zhù = wohnen",
+          "你 住 在 哪里？ = nǐ zhù zài nǎlǐ? = Wo wohnst du? | 房租 太 贵 了 = fángzū tài guì le = Die Miete ist zu teuer | 我 住 在 五 楼 = wǒ zhù zài wǔ lóu = Ich wohne im fünften Stock | 下 个 月 我 搬家 = xià ge yuè wǒ bānjiā = Nächsten Monat ziehe ich um"),
+      ],
+    }
+  );
+
+  // Tipps für die neuen Lektionen
+  window.TIPS = Object.assign(window.TIPS || {}, {
+    "es-31": "Viele Alltagsverben sind reflexiv, sie haben ein „me/te/se“ dabei: me despierto (ich wache auf), me acuesto (ich gehe ins Bett). Mehr dazu in der Grammatik-Lektion am Ende dieses Teils.",
+    "es-32": "„¿Puedo …?“ = Darf/Kann ich …? Danach kommt die Grundform: ¿Puedo hacer una pregunta?",
+    "es-33": "„¿Puedes …?“ = Kannst du …? Eine höfliche Bitte: ¿Puedes ayudarme? (Kannst du mir helfen?)",
+    "es-34": "„Quedar“ heißt sich verabreden: ¿Quedamos? = Treffen wir uns? „Te invito“ heißt „ich lade dich ein“, dann bezahlt man auch.",
+    "es-35": "„No funciona“ = funktioniert nicht. Sehr praktisch für Handy, Internet oder Automaten.",
+    "es-36": "Beim Arzt: „Tengo fiebre“ (ich habe Fieber), „me duele …“ (… tut mir weh). Die Apotheke erkennt man am grünen Kreuz.",
+    "es-37": "Glückwünsche: ¡Feliz Navidad! ¡Feliz Año Nuevo! ¡Felicidades! „Feliz“ heißt glücklich.",
+    "es-38": "„En“ + Verkehrsmittel: en coche, en autobús, en bicicleta. Nur zu Fuß heißt „a pie“.",
+    "es-39": "„¿Has visto …?“ ist das Perfekt (habe gesehen): haber + Partizip. Es wird im Alltag sehr oft benutzt.",
+    "es-40": "„Tenemos que“ + Grundform = wir müssen: Tenemos que reciclar. „Está cambiando“ heißt „verändert sich gerade“.",
+    "es-41": "„Pagar en efectivo“ = bar bezahlen, „pagar con tarjeta“ = mit Karte bezahlen.",
+    "es-42": "In Spanien sagt man „piso“ für Wohnung, in Lateinamerika oft „apartamento“. Beides wird verstanden.",
+    "fr-31": "Viele Alltagsverben sind reflexiv, sie haben ein „me/te/se“ dabei: je me réveille, je me couche. Mehr dazu in der Grammatik-Lektion am Ende dieses Teils.",
+    "fr-32": "„Je peux …?“ = Darf/Kann ich …? Danach kommt die Grundform: Je peux poser une question ?",
+    "fr-33": "„Tu peux …?“ = Kannst du …? Eine höfliche Bitte: Tu peux m'aider ? (Kannst du mir helfen?)",
+    "fr-34": "„On se retrouve ?“ = Treffen wir uns? „On“ heißt im Alltag oft „wir“.",
+    "fr-35": "„Ça ne marche pas“ = Das funktioniert nicht. Sehr praktisch für Handy, Internet oder Automaten.",
+    "fr-36": "Beim Arzt: „J'ai de la fièvre“ (Fieber), „j'ai mal à …“ (… tut weh). Die Apotheke erkennt man am grünen Kreuz.",
+    "fr-37": "Glückwünsche beginnen oft mit „Joyeux“ oder „Bonne“: Joyeux Noël, Bonne année (gutes neues Jahr).",
+    "fr-38": "Verkehrsmittel: en voiture, en bus, aber à vélo und à pied (zu Fuß).",
+    "fr-39": "„Tu as vu …?“ = Hast du … gesehen? Das ist das passé composé, die häufigste Vergangenheit.",
+    "fr-40": "„Nous devons“ + Grundform = wir müssen: Nous devons recycler.",
+    "fr-41": "„Payer en espèces“ = bar bezahlen, „payer par carte“ = mit Karte bezahlen.",
+    "fr-42": "„Chercher“ heißt suchen: Je cherche un appartement. Achtung: „chercher“ braucht kein „nach“.",
+    "zh-25": "Zeitangaben stehen vor dem Verb: 我每天七点起床 = Ich stehe jeden Tag um sieben auf. Die Mahlzeiten enden alle auf 饭 (fàn = Essen/Reis).",
+    "zh-26": "懂 (dǒng) = verstehen. 我不懂 ist einer der nützlichsten Sätze überhaupt! Schriftzeichen (汉字) bestehen oft aus kleineren Teilen.",
+    "zh-27": "快乐 (kuàilè) bedeutet fröhlich und steht in vielen Glückwünschen: 生日快乐 (Geburtstag fröhlich).",
+    "zh-28": "打电话 (dǎ diànhuà) heißt anrufen, wörtlich „Telefon schlagen“. 没电了 = Akku leer (kein Strom mehr).",
+    "zh-29": "有点 (yǒudiǎn) = ein bisschen, meist bei negativen Dingen: 有点发烧 = etwas Fieber.",
+    "zh-30": "能 (néng) = können (möglich sein): 你能帮我吗？ = Kannst du mir helfen?",
+    "zh-31": "Zum Frühlingsfest (chinesisches Neujahr) gibt es rote Umschläge mit Geld (红包). Rot bringt Glück!",
+    "zh-32": "骑 (qí) benutzt man für Fahrrad und Pferd (auf etwas sitzen), 坐 (zuò) für Bus, Zug und Flugzeug.",
+    "zh-33": "有意思 (yǒu yìsi) heißt wörtlich „hat Bedeutung“, also interessant. 没意思 = langweilig.",
+    "zh-34": "要 (yào) heißt hier „müssen“: 我们要保护环境 = Wir müssen die Umwelt schützen.",
+    "zh-35": "In China bezahlt man fast alles mit dem Handy (微信 WeChat oder 支付宝 Alipay). 可以…吗？ = Darf man …?",
+    "zh-36": "Stockwerke zählt man mit 楼 (lóu): 五楼 = fünfter Stock. In China ist das Erdgeschoss schon 一楼!",
+  });
+})();
